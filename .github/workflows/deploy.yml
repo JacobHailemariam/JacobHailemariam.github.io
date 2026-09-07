@@ -1,0 +1,66 @@
+# Builds the site and publishes it to GitHub Pages on every push to `main`.
+# You never run this yourself — GitHub runs it automatically.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # lets you re-run it manually from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If you push twice quickly, cancel the first run rather than racing.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # NOTE: no `cache: npm` here, deliberately.
+      #
+      # That option makes setup-node look for a package-lock.json to hash, and
+      # if the file isn't in the repository the step fails outright with
+      # "Dependencies lock file is not found" — before the install step ever
+      # runs. It's a caching optimisation that turns into a hard failure, which
+      # is a bad trade for a build that takes under a minute anyway.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # `npm install` rather than `npm ci` for the same reason: it works whether
+      # or not a lockfile is committed. Once package-lock.json is in the repo
+      # you can switch to `npm ci` for stricter, reproducible installs.
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static site
+        run: npm run build
+
+      # GitHub Pages runs Jekyll by default, and Jekyll silently ignores every
+      # folder whose name starts with an underscore. Next.js puts ALL of its
+      # CSS and JavaScript in `_next/`. Without this file the site deploys
+      # "successfully" and loads as unstyled black text on white.
+      - name: Disable Jekyll
+        run: touch ./out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* The sticky header is 64px tall. Without this, jumping to #work parks the
+       section heading underneath the header. */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-void text-bone font-sans text-body antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Keyboard focus is amber, never removed. Amber rather than violet because
+     violet is doing structural work everywhere else — the focus ring needs to
+     be unmistakably different from decoration. */
+  /* No `rounded-*` here on purpose: the ring follows whatever border-radius
+     the element already has. Setting one globally would square off the pill
+     buttons the moment they receive focus. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ember ring-offset-2 ring-offset-ink-void;
+  }
+
+  /* Selection picks up the signature accent. Small detail, costs nothing. */
+  ::selection {
+    background-color: theme("colors.volt.DEFAULT");
+    color: theme("colors.bone.DEFAULT");
+  }
+
+  /* Headings inherit the display face by default so components don't have to
+     remember to ask for it. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-semibold text-balance;
+  }
+}
+
+@layer components {
+  /* The page's horizontal rhythm. One class, applied at every section, so
+     nothing drifts out of alignment. */
+  .shell {
+    @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
+  }
+
+  /* Hairline divider used to separate sections. `border-t` on a section would
+     work, but this lets the rule animate in independently of the content. */
+  .hairline {
+    @apply h-px w-full bg-ink-rule;
+  }
+}
+
+/*
+ * REDUCED MOTION
+ * Framer Motion components check useReducedMotion() individually and render
+ * their final state directly. This block is the safety net for anything that
+ * animates in plain CSS — including scroll-behavior, which Framer can't see.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

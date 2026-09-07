@@ -1,0 +1,3 @@
+# Windows checks files out with CRLF line endings by default, which silently
+# breaks shell scripts for anyone who later runs them on Linux or macOS.
+*.sh text eol=lf
