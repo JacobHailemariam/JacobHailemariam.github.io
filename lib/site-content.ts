@@ -148,20 +148,13 @@ export const featuredProject: Project = {
       height: 284,
     },
     {
-      src: null, // ← drop in /public/images/gsil-architecture.png
+      src: "/images/gsil-architecture.png",
       alt: "Baseline model architecture diagram for hyperspectral and LiDAR fusion.",
       // ⚠️ HONESTY: this caption must name the paper this baseline comes from.
       caption:
         "Baseline architecture this work builds on. Source: [ADD CITATION]. Diagram reproduced for reference — not my design. My modifications are labelled separately.",
-      width: 1600,
-      height: 900,
-    },
-    {
-      src: null, // ← drop in /public/images/gsil-code-1.png
-      alt: "Model definition and training loop source code.",
-      caption: "Model definition and training loop.",
-      width: 1600,
-      height: 1000,
+      width: 1382,
+      height: 740,
     },
   ],
 };
