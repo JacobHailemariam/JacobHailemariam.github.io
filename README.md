@@ -80,7 +80,6 @@ To add one: drop the file into `public/images/`, then set the matching `src` in
 
 | Drop the file at | Then set | Notes |
 | --- | --- | --- |
-| `public/images/url-shortener-docs.png` | `projects → "url-shortener" → images[0].src` | Script below fetches this |
 
 ### Fetching the three that live in your own repos
 
