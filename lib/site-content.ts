@@ -69,6 +69,8 @@ export type Project = {
   tech: string[];
   repoUrl: string | null;
   liveUrl: string | null;
+  /** Further outbound links beyond the site and repo, e.g. a companion app. */
+  extraLinks?: { label: string; href: string }[];
   /** Renders as the reason there's no link, so a recruiter isn't left guessing. */
   linkNote?: string;
   images: AssetRef[];
@@ -197,18 +199,22 @@ export const projects: Project[] = [
     liveUrl: null,
     images: [
       {
-        src: null, // ← copy from the repo's assets/train_val_accuracy.png
-        alt: "Training and validation accuracy curves converging near 90 percent over 190 epochs.",
-        caption: "Training and validation accuracy.",
-        width: 1200,
-        height: 800,
+        src: "/images/vit-loss.png",
+        alt: "Training and validation loss over 190 epochs. Validation loss falls smoothly from about 2.1 to 0.76 and stays below the noisier training loss; the best epoch by validation loss is 170.",
+        caption:
+          "Training vs validation loss. Validation sits below training because MixUp/CutMix and stochastic depth only apply at train time. Best epoch: 170.",
+        width: 824,
+        height: 412,
+        display: { aspect: "aspect-[2/1]", fit: "contain" },
       },
       {
-        src: null, // ← copy from the repo's assets/confusion_matrix.png
-        alt: "Confusion matrix across the ten CIFAR-10 classes, with cat and dog showing the most overlap.",
-        caption: "Per-class confusion. Cat and dog are the hard pair.",
-        width: 1200,
-        height: 1000,
+        src: "/images/vit-confusion.png",
+        alt: "Row-normalised confusion matrix across the ten CIFAR-10 classes for the best EMA model. Automobile is highest at 95.7 percent; cat is lowest at 76.7 percent, with 10.7 percent misread as dog and 11.2 percent of dogs misread as cat.",
+        caption:
+          "Per-class confusion, best EMA weights on the test set. Cat and dog are the hard pair — about 11% of each is mistaken for the other.",
+        width: 1176,
+        height: 960,
+        display: { aspect: "aspect-[1176/960]", fit: "contain" },
       },
     ],
   },
@@ -273,7 +279,12 @@ export const projects: Project[] = [
     ],
     repoUrl: null,
     liveUrl: "https://enginquire.com",
-    // ← Paste the Blueprint Generator URL here to render a second link.
+    extraLinks: [
+      {
+        label: "Blueprint Generator",
+        href: "https://enginquire-schedule-generator.vercel.app/",
+      },
+    ],
     images: [
       {
         src: "/images/enginquire-cohort.jpg",

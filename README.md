@@ -80,8 +80,6 @@ To add one: drop the file into `public/images/`, then set the matching `src` in
 
 | Drop the file at | Then set | Notes |
 | --- | --- | --- |
-| `public/images/vit-accuracy.png` | `projects → "vit" → images[0].src` | Script below fetches this |
-| `public/images/vit-confusion.png` | `projects → "vit" → images[1].src` | Script below fetches this |
 | `public/images/url-shortener-docs.png` | `projects → "url-shortener" → images[0].src` | Script below fetches this |
 
 ### Fetching the three that live in your own repos
@@ -98,7 +96,6 @@ lines to change. No cloning, no dragging files around.
 
 | Where | What's needed |
 | --- | --- |
-| `lib/site-content.ts` → `projects → "enginquire"` | The **First-Year Blueprint Generator** URL. Currently only `enginquire.com` is linked. Add a second `ActionLink` in `ProjectCard`, or replace `liveUrl`. |
 | `lib/site-content.ts` → `projects → "url-shortener"` | `liveUrl` is `null` — no demo is deployed yet. See below. |
 
 ---
