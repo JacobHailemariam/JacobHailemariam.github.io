@@ -92,6 +92,11 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/jacob-hailemariam",
   /** Served from /public. Replace the PDF in place to update it. */
   resume: "/Jacob-Hailemariam-Resume.pdf",
+  /** Current roles, shown above the name. Keep each one short. */
+  roles: [
+    { title: "Machine Learning Researcher", org: "UCalgary GSIL" },
+    { title: "Avionics Software Engineer", org: "SOAR Rocketry" },
+  ],
   /** Shown in the hero so a visitor sees who this is before scrolling. */
   headshot: {
     src: "/images/jacob-portrait.jpg",
@@ -126,22 +131,30 @@ export const about = {
  */
 export const featuredProject: Project = {
   id: "gsil",
-  title: "AI for remote sensing and Earth observation",
-  context: "Geospatial Sensing & Intelligence Lab · Prof. Lincoln Xu · May 2026 — present",
+  title: "Machine Learning Researcher: deep multimodal fusion",
+  context:
+    "Geospatial Sensing & Intelligence Lab · University of Calgary · NSERC USRA · May 2026 — present",
   summary:
-    "Undergraduate researcher on an NSERC USRA, integrating machine learning with hyperspectral and LiDAR sensing to extract environmental information from Earth observation data.",
+    "I design and train PyTorch models (CNNs, Transformers, and Mamba state-space models) that fuse two sensors into one prediction: a hyperspectral camera that sees up to 144 bands of light per pixel (a normal camera sees 3), and LiDAR that measures height in 3-D. The result is a map of what's on the ground, and I'm writing it up as a first-author paper.",
+  metrics: [
+    { value: "144", label: "bands per pixel, vs 3 in a photo" },
+    { value: "3", label: "benchmark datasets" },
+    { value: "1st", label: "author, arXiv manuscript" },
+  ],
   detail: [
-    "The work spans the full pipeline: collecting hyperspectral and LiDAR sensor data, preprocessing it into something a model can learn from, and building the models that pull environmental signal back out.",
-    "A lot of it is hands-on with low-cost hyperspectral platforms and LiDAR hardware — learning the instrument alongside the algorithm, which changes how you read the data.",
-    "It feeds environmental monitoring, ecosystem analysis, and sustainable resource management.",
+    "The problem: each sensor alone is ambiguous. A roof and a road can have almost the same spectrum; grass and trees too. LiDAR separates them by height but can't tell road from grass from water. The model has to learn when to trust which signal. The interactive demo below shows exactly this.",
+    "What I build: custom PyTorch datasets, transforms, and training loops; a modular Python pipeline that spatially aligns and patches large remote-sensing rasters; and a reproducible benchmarking protocol, run across three public datasets on shared Linux GPU servers.",
+    "Where it starts: DAHGMN, a hybrid graph-convolution + Mamba architecture (diagram below), which I reproduce as a baseline and build on.",
   ],
   tech: [
     "PyTorch",
-    "Hyperspectral imaging",
-    "LiDAR",
-    "Geospatial processing",
+    "CNNs",
+    "Transformers",
+    "Mamba / SSMs",
+    "Graph convolution",
+    "Multimodal fusion",
     "Python",
-    "NumPy",
+    "Linux GPU servers",
   ],
   repoUrl: null,
   liveUrl: null,
