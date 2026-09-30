@@ -88,6 +88,8 @@ export const profile = {
   email: "jacob.hailemariam@ucalgary.ca",
   github: "https://github.com/JacobHailemariam",
   linkedin: "https://www.linkedin.com/in/jacob-hailemariam",
+  /** Served from /public. Replace the PDF in place to update it. */
+  resume: "/Jacob-Hailemariam-Resume.pdf",
 } as const;
 
 /* ── About ────────────────────────────────────────────────────────────────── */
@@ -118,7 +120,7 @@ export const about = {
 export const featuredProject: Project = {
   id: "gsil",
   title: "AI for remote sensing and Earth observation",
-  context: "Geospatial Sensing & Intelligence Lab · Prof. Lincoln Xu · Summer 2026",
+  context: "Geospatial Sensing & Intelligence Lab · Prof. Lincoln Xu · May 2026 — present",
   summary:
     "Undergraduate researcher on an NSERC USRA, integrating machine learning with hyperspectral and LiDAR sensing to extract environmental information from Earth observation data.",
   detail: [
@@ -140,21 +142,29 @@ export const featuredProject: Project = {
   images: [
     {
       src: "/images/gsil-hyperspectral.webp",
-      alt: "False-colour composite of a hyperspectral scene after principal component analysis, showing vegetation in green and built structures in red and magenta.",
-      // ⚠️ VERIFY THE DATASET NAME BEFORE PUBLISHING — see README.
+      alt: "False-colour composite of the Houston 2013 hyperspectral scene after principal component analysis, showing vegetation in green and built structures in red and magenta.",
       caption:
-        "Principal-component false-colour composite of a benchmark hyperspectral scene used in this work. Public dataset; visualisation generated during preprocessing.",
+        "Principal-component false-colour composite of the Houston 2013 scene (2013 IEEE GRSS Data Fusion Contest), one of the benchmark datasets used in this work. Public dataset; visualisation generated during preprocessing.",
       width: 1330,
       height: 284,
     },
     {
-      src: "/images/gsil-architecture.png",
-      alt: "Baseline model architecture diagram for hyperspectral and LiDAR fusion.",
-      // ⚠️ HONESTY: this caption must name the paper this baseline comes from.
+      src: "/images/houston2013-groundtruth.png",
+      alt: "Houston 2013 dataset: (a) false-colour composite of the scene and (b) ground-truth labels for 15 land-cover classes, including grass, trees, water, residential, commercial, roads, highway, railway, and parking lots.",
       caption:
-        "Baseline architecture this work builds on. Source: [ADD CITATION]. Diagram reproduced for reference — not my design. My modifications are labelled separately.",
-      width: 1382,
-      height: 740,
+        "Houston 2013: (a) false-colour composite, (b) ground-truth labels across 15 land-cover classes. Public dataset, 2013 IEEE GRSS Data Fusion Contest.",
+      width: 733,
+      height: 272,
+      display: { aspect: "aspect-[733/272]", fit: "contain" },
+    },
+    {
+      src: "/images/gsil-architecture.png",
+      alt: "DAHGMN architecture diagram: CNN feature extraction for hyperspectral and LiDAR inputs, spectral and spatial attention fusion, a hybrid GCN–Mamba feature-processing block, and probability-based decision fusion for classification.",
+      caption:
+        "Baseline architecture this work builds on: DAHGMN, from Z. Xie, L. Lv, H. Gao, S. Xu, and H. Xie, “Dual-Feature Attention Hybrid GCN Mamba Network for Joint Hyperspectral and LiDAR Classification,” IEEE Transactions on Geoscience and Remote Sensing, vol. 63, 2025, doi:10.1109/TGRS.2025.3605373. Figure reproduced from the paper for reference — not my design.",
+      width: 960,
+      height: 442,
+      display: { aspect: "aspect-[960/442]", fit: "contain" },
     },
   ],
 };
@@ -318,11 +328,12 @@ export const projects: Project[] = [
         height: 1046,
       },
       {
-        src: null, // ← drop in /public/images/altium-schematic.png
-        alt: "Altium Designer schematic capture for the Simon Says circuit.",
-        caption: "Schematic capture.",
-        width: 1600,
-        height: 1000,
+        src: "/images/altium-schematic.png",
+        alt: "Altium Designer schematic for the Simon Says circuit: a PJ-102A barrel jack feeding an L7805CV 5 V regulator that powers the Raspberry Pi Pico, four TS-1109 tactile switches on GP0 to GP3, and four LEDs with 100-ohm current-limiting resistors on GP22, GP26, GP27, and GP28.",
+        caption:
+          "Schematic capture: L7805 regulator into the Pico, four switches in, four LEDs out.",
+        width: 1658,
+        height: 900,
       },
     ],
   },
@@ -341,12 +352,30 @@ export type Role = {
 export const experience: Role[] = [
   {
     organisation: "Geospatial Sensing & Intelligence Lab, University of Calgary",
-    title: "Undergraduate Research Assistant — NSERC USRA",
-    period: "Summer 2026",
+    title: "Machine Learning Researcher — NSERC USRA",
+    period: "May 2026 — present",
     points: [
-      "Collect and preprocess hyperspectral and LiDAR sensor data, then build ML models that extract environmental information from it.",
-      "Work hands-on with low-cost hyperspectral platforms and LiDAR hardware.",
-      "Research supports environmental monitoring, ecosystem analysis, and sustainable resource management.",
+      "Design, build, and train PyTorch models (CNNs, Transformers, Mamba) for multimodal fusion of LiDAR and hyperspectral imagery.",
+      "Established a reproducible benchmarking protocol across three datasets on shared Linux GPU servers; authoring a first-author manuscript for arXiv.",
+      "Built a modular Python pipeline that spatially aligns and transforms large remote-sensing datasets.",
+    ],
+  },
+  {
+    organisation: "Student Organization for Aerospace Research (SOAR)",
+    title: "Avionics Software Engineer",
+    period: "Sep 2026 — present",
+    points: [
+      "Develop C++ flight software for the Eos rocket avionics, interfacing sensors through object-oriented code.",
+      "Contribute to sensor drivers and telemetry modules over I2C, SPI, and UART.",
+    ],
+  },
+  {
+    organisation: "Embedded in Embedded — Garmin-affiliated program",
+    title: "Member",
+    period: "Sep 2026 — present",
+    points: [
+      "Develop embedded C firmware on a Nordic nRF52840 (ARM Cortex-M4) using Zephyr RTOS.",
+      "Working through GPIO, PWM, state machines, BLE, and serial protocols with J-Link debugging.",
     ],
   },
   {
@@ -389,19 +418,21 @@ export const skillGroups: SkillGroup[] = [
       "CNNs",
       "Transformers",
       "Mamba / state-space models",
+      "Multimodal fusion",
       "Hyperspectral & LiDAR data",
     ],
   },
   {
     heading: "Languages",
-    note: "Python for models and services, C++ and MicroPython closer to the hardware.",
-    items: ["Python", "C++", "JavaScript", "MicroPython"],
+    note: "Python for models and services, C and C++ closer to the hardware.",
+    items: ["Python", "C++", "C", "TypeScript", "SQL", "MicroPython"],
   },
   {
     heading: "Backend & systems",
     note: "What it takes to get a model or an API off a laptop and onto a machine someone else can hit.",
     items: [
       "FastAPI",
+      "React",
       "PostgreSQL",
       "Redis",
       "Docker",
@@ -414,10 +445,13 @@ export const skillGroups: SkillGroup[] = [
     heading: "Hardware & embedded",
     note: "Schematic to fabricated board, and the firmware that runs on it.",
     items: [
+      "Zephyr RTOS",
+      "ARM Cortex-M",
+      "J-Link",
+      "I2C / SPI / UART",
       "Altium Designer",
       "PCB design",
       "Raspberry Pi Pico",
-      "Schematic capture",
       "Soldering",
     ],
   },
