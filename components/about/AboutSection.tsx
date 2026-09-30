@@ -46,13 +46,6 @@ export default function AboutSection() {
               </p>
             ))}
           </div>
-
-          {/* The human line. Set apart by a violet rule rather than dropped
-              into the prose, so it reads as an aside and can't be mistaken for
-              part of the professional pitch. */}
-          <p className="mt-10 max-w-prose border-l-2 border-volt pl-5 text-body text-bone-faint">
-            {about.offTheClock}
-          </p>
         </Reveal>
       </div>
     </SectionShell>

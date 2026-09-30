@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import SensorField from "./SensorField";
 import { ActionLink } from "@/components/ui/Primitives";
@@ -74,13 +75,28 @@ export default function HeroSection() {
         <div className="pointer-events-none absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-ink-void to-transparent" />
       </div>
 
-      <div className="shell relative flex min-h-[92svh] flex-col justify-center py-28 sm:py-32">
+      <div className="shell relative flex min-h-[92svh] flex-col justify-center py-28 sm:py-32 xl:flex-row xl:items-center xl:justify-between xl:gap-16">
         <motion.div
           variants={container}
           initial="hidden"
           animate="visible"
-          className="max-w-4xl"
+          className="min-w-0 max-w-4xl"
         >
+          {/* Below xl the name fills the width, so the portrait shrinks to an
+              avatar above it instead of competing for a column. */}
+          <motion.div variants={variants} className="mb-8 xl:hidden">
+            <div className="relative h-24 w-24 overflow-hidden rounded-full border border-ink-ruleHi bg-ink-panel sm:h-28 sm:w-28">
+              <Image
+                src={profile.headshot.src}
+                alt={profile.headshot.alt}
+                fill
+                priority
+                sizes="7rem"
+                className="object-cover"
+              />
+            </div>
+          </motion.div>
+
           {/* Name. The h1 carries both the name and the identity line so the
               document has exactly one h1 and it says who this is. */}
           <motion.h1
@@ -121,6 +137,26 @@ export default function HeroSection() {
               LinkedIn
             </ActionLink>
           </motion.div>
+        </motion.div>
+
+        {/* On wide screens the portrait gets its own column, sitting over the
+            sensor field so the two read as one composition. */}
+        <motion.div
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: SIGNATURE_EASE, delay: 0.45 }}
+          className="hidden w-72 shrink-0 xl:block 2xl:w-80"
+        >
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel">
+            <Image
+              src={profile.headshot.src}
+              alt={profile.headshot.alt}
+              fill
+              priority
+              sizes="20rem"
+              className="object-cover"
+            />
+          </div>
         </motion.div>
       </div>
     </section>
