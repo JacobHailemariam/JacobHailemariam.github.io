@@ -123,7 +123,7 @@ export default function SiteHeader() {
                 rel="noopener noreferrer"
                 className="ml-1 block rounded-full border border-ink-ruleHi px-3 py-1.5 text-meta text-bone-muted transition-colors duration-200 ease-signature hover:border-ember hover:text-ember sm:ml-2 sm:px-4"
               >
-                Résumé
+                Resume
                 <span className="sr-only"> (PDF, opens in a new tab)</span>
               </a>
             </li>
