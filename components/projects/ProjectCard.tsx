@@ -72,13 +72,18 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             <TechTagList items={project.tech} />
           </div>
 
-          {(project.repoUrl || project.liveUrl) && (
+          {Boolean(project.repoUrl || project.liveUrl || project.extraLinks?.length) && (
             <div className="mt-8 flex flex-wrap gap-3">
               {project.liveUrl ? (
                 <ActionLink href={project.liveUrl} variant="solid" external>
                   Visit site
                 </ActionLink>
               ) : null}
+              {project.extraLinks?.map((link) => (
+                <ActionLink key={link.href} href={link.href} external>
+                  {link.label}
+                </ActionLink>
+              ))}
               {project.repoUrl ? (
                 <ActionLink href={project.repoUrl} external>
                   Repository
