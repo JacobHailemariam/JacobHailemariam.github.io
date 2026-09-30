@@ -246,11 +246,12 @@ export const projects: Project[] = [
     liveUrl: null,
     images: [
       {
-        src: null, // ← copy from the repo's screenshots/api-docs.png
-        alt: "Auto-generated Swagger UI listing the shorten, redirect, and health-check endpoints.",
+        src: "/images/url-shortener-docs.png",
+        alt: "Auto-generated Swagger UI for the URL Shortener API, showing the health-check endpoint and the POST /shorten endpoint expanded with its long_url JSON request body.",
         caption: "Auto-generated OpenAPI docs at /docs.",
-        width: 1600,
-        height: 900,
+        width: 1280,
+        height: 660,
+        display: { aspect: "aspect-[1280/660]", fit: "contain" },
       },
     ],
   },
