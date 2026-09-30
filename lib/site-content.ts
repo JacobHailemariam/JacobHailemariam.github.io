@@ -82,7 +82,7 @@ export const profile = {
   name: "Jacob Hailemariam",
   /** Sits directly under the name. States what he is, in one breath. */
   identity:
-    "Electrical Engineering student building software and ML/AI systems",
+    "Electrical & Computer Engineering student building software and ML/AI systems",
   /** The voice line. Short, specific, no "passionate developer" energy. */
   tagline:
     "Second year at the University of Calgary. I train models on hyperspectral data, ship backend services, and route my own PCBs.",
@@ -92,6 +92,13 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/jacob-hailemariam",
   /** Served from /public. Replace the PDF in place to update it. */
   resume: "/Jacob-Hailemariam-Resume.pdf",
+  /** Shown in the hero so a visitor sees who this is before scrolling. */
+  headshot: {
+    src: "/images/jacob-headshot.jpg",
+    alt: "Jacob Hailemariam, smiling, in a white shirt, navy vest, and patterned tie.",
+    width: 510,
+    height: 510,
+  } satisfies AssetRef,
 } as const;
 
 /* ── About ────────────────────────────────────────────────────────────────── */
@@ -103,8 +110,6 @@ export const about = {
     "The other half of me lives closer to the metal. I like circuits and PCBs, and I want to go deeper into embedded systems and point that at autonomous and computer-vision robotics — the place where the model and the hardware have to agree with each other.",
     "Coding, software engineering, and cybersecurity have been constants throughout. Long term I'm aiming at a big-industry software role where the work reaches enough people to matter.",
   ],
-  offTheClock:
-    "Off the clock: basketball, ping pong, anime, and a Smash Bros habit I'm not apologising for.",
   photo: {
     src: "/images/jacob.jpg",
     alt: "Jacob Hailemariam",
