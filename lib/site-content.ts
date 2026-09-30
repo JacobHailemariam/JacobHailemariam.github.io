@@ -82,7 +82,7 @@ export const profile = {
   name: "Jacob Hailemariam",
   /** Sits directly under the name. States what he is, in one breath. */
   identity:
-    "Electrical & Computer Engineering student building software and ML/AI systems",
+    "Electrical & Computer Engineering student building embedded software and ML/AI systems",
   /** The voice line. Short, specific, no "passionate developer" energy. */
   tagline:
     "Second year at the University of Calgary. I train models on hyperspectral data, ship backend services, and route my own PCBs.",
@@ -94,10 +94,10 @@ export const profile = {
   resume: "/Jacob-Hailemariam-Resume.pdf",
   /** Shown in the hero so a visitor sees who this is before scrolling. */
   headshot: {
-    src: "/images/jacob-headshot.jpg",
-    alt: "Jacob Hailemariam, smiling, in a white shirt, navy vest, and patterned tie.",
-    width: 510,
-    height: 510,
+    src: "/images/jacob-portrait.jpg",
+    alt: "Jacob Hailemariam, smiling with arms crossed, in a white shirt, navy vest, and patterned tie on Calgary's Peace Bridge.",
+    width: 660,
+    height: 880,
   } satisfies AssetRef,
 } as const;
 

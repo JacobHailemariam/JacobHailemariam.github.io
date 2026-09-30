@@ -82,16 +82,16 @@ export default function HeroSection() {
           animate="visible"
           className="min-w-0 max-w-4xl"
         >
-          {/* Below xl the name fills the width, so the portrait shrinks to an
-              avatar above it instead of competing for a column. */}
-          <motion.div variants={variants} className="mb-8 xl:hidden">
-            <div className="relative h-24 w-24 overflow-hidden rounded-full border border-ink-ruleHi bg-ink-panel sm:h-28 sm:w-28">
+          {/* Below xl the name fills the width, so the portrait moves above
+              it instead of competing for a column. */}
+          <motion.div variants={variants} className="mb-10 xl:hidden">
+            <div className="relative aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel sm:w-56">
               <Image
                 src={profile.headshot.src}
                 alt={profile.headshot.alt}
                 fill
                 priority
-                sizes="7rem"
+                sizes="14rem"
                 className="object-cover"
               />
             </div>
@@ -145,15 +145,15 @@ export default function HeroSection() {
           initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: SIGNATURE_EASE, delay: 0.45 }}
-          className="hidden w-72 shrink-0 xl:block 2xl:w-80"
+          className="hidden w-80 shrink-0 xl:block 2xl:w-96"
         >
-          <div className="relative aspect-square overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel">
             <Image
               src={profile.headshot.src}
               alt={profile.headshot.alt}
               fill
               priority
-              sizes="20rem"
+              sizes="24rem"
               className="object-cover"
             />
           </div>
