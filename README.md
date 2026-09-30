@@ -80,12 +80,9 @@ To add one: drop the file into `public/images/`, then set the matching `src` in
 
 | Drop the file at | Then set | Notes |
 | --- | --- | --- |
-| `public/images/gsil-architecture.png` | `featuredProject.images[1].src` | **Needs a citation** — see below |
-| `public/images/gsil-code-1.png` | `featuredProject.images[2].src` | Model / training code screenshot |
 | `public/images/vit-accuracy.png` | `projects → "vit" → images[0].src` | Script below fetches this |
 | `public/images/vit-confusion.png` | `projects → "vit" → images[1].src` | Script below fetches this |
 | `public/images/url-shortener-docs.png` | `projects → "url-shortener" → images[0].src` | Script below fetches this |
-| `public/images/altium-schematic.png` | `projects → "simon-says" → images[1].src` | Schematic capture |
 
 ### Fetching the three that live in your own repos
 
@@ -103,43 +100,19 @@ lines to change. No cloning, no dragging files around.
 | --- | --- |
 | `lib/site-content.ts` → `projects → "enginquire"` | The **First-Year Blueprint Generator** URL. Currently only `enginquire.com` is linked. Add a second `ActionLink` in `ProjectCard`, or replace `liveUrl`. |
 | `lib/site-content.ts` → `projects → "url-shortener"` | `liveUrl` is `null` — no demo is deployed yet. See below. |
-| `app/layout.tsx` → `metadataBase` | Update to your real domain after the first deploy, so link previews resolve correctly. |
 
 ---
 
-## Two things to check before you publish
+## Attribution on the research images
 
-### 1. The hyperspectral image caption
-
-You described this as `trento_pca`, but the image doesn't look like the Trento
-scene. Trento is rural — forest, vineyards, apple orchards, roughly 600×166.
-Your file is 1330×284 and shows a dense street grid, a stadium with a running
-track, a cloverleaf highway interchange, and a shadowed region on the right.
-That's the signature of the **Houston 2013 GRSS Data Fusion Contest** scene
-(University of Houston campus).
-
-You know your own pipeline and I may be wrong. So the caption as written names
-no dataset at all — it says "a benchmark hyperspectral scene," which is true
-either way. **Confirm which file you ran PCA on and name it explicitly**, because
-naming the right dataset is a small, checkable signal of care that the kind of
-person reading this page will notice.
-
-### 2. The architecture diagram citation
-
-The caption in `lib/site-content.ts` currently reads:
-
-> Baseline architecture this work builds on. Source: **[ADD CITATION]**. Diagram
-> reproduced for reference — not my design. My modifications are labelled
-> separately.
-
-Replace `[ADD CITATION]` with the real paper (authors, year, venue) before this
-image goes live. If you end up marking your own modifications on the diagram,
-split it into two figures rather than editing this caption — one showing the
-baseline as published, one showing your changes — so there's no ambiguity about
-which parts are yours.
+- The hyperspectral strip and the ground-truth figure are both the **Houston
+  2013** scene (2013 IEEE GRSS Data Fusion Contest). Captions name it.
+- The architecture diagram is **DAHGMN** — Xie et al., IEEE TGRS vol. 63, 2025,
+  doi:10.1109/TGRS.2025.3605373 — and the caption says it is reproduced from
+  the paper, not original work. If you later diagram your own modifications,
+  add them as a separate figure rather than editing this one.
 
 ---
-
 ## Deploying the live API demo
 
 The URL shortener's `liveUrl` is `null`, so the "Visit site" button simply isn't

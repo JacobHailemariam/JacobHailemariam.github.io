@@ -11,8 +11,6 @@ import { profile } from "@/lib/site-content";
  * story, and a delivery guarantee, and it puts a step between the visitor and
  * the inbox. A recruiter would rather have the address anyway — they usually
  * want it in their own client so it threads with the rest of their pipeline.
- *
- * Note there is deliberately no résumé link, per the brief.
  */
 export default function ContactSection() {
   return (
@@ -59,6 +57,17 @@ export default function ContactSection() {
               className="text-body text-bone-muted transition-colors duration-200 ease-signature hover:text-ember"
             >
               LinkedIn
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={profile.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-body text-bone-muted transition-colors duration-200 ease-signature hover:text-ember"
+            >
+              Résumé (PDF)
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
