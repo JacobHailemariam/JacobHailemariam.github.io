@@ -1,6 +1,7 @@
 import AssetImage from "@/components/ui/AssetImage";
 import Reveal from "@/components/ui/Reveal";
-import { TechTagList, ActionLink } from "@/components/ui/Primitives";
+import { TechTagList, MetricRow, ActionLink } from "@/components/ui/Primitives";
+import FusionExplorer from "./FusionExplorer";
 import type { Project } from "@/lib/site-content";
 
 /**
@@ -34,6 +35,11 @@ export default function FeaturedProject({ project }: { project: Project }) {
         <p className="mt-6 max-w-2xl text-lede text-bone-muted">
           {project.summary}
         </p>
+        {project.metrics ? (
+          <div className="mt-10">
+            <MetricRow metrics={project.metrics} />
+          </div>
+        ) : null}
       </Reveal>
 
       {/* ── The strip ─────────────────────────────────────────────────── */}
@@ -94,6 +100,11 @@ export default function FeaturedProject({ project }: { project: Project }) {
           </div>
         </Reveal>
       </div>
+
+      {/* ── The hook ──────────────────────────────────────────────────── */}
+      <Reveal className="mt-16 sm:mt-20">
+        <FusionExplorer />
+      </Reveal>
     </article>
   );
 }

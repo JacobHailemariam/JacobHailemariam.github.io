@@ -97,6 +97,24 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
+          {/* Current roles. The first thing a recruiter reads, so it names the
+              jobs outright rather than leaving them to the Experience section. */}
+          <motion.ul
+            variants={variants}
+            className="mb-7 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5"
+          >
+            {profile.roles.map((role) => (
+              <li key={role.title} className="flex items-center gap-2.5 text-meta">
+                <span aria-hidden="true" className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt opacity-60 motion-reduce:animate-none" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-volt-hi" />
+                </span>
+                <span className="font-semibold text-bone">{role.title}</span>
+                <span className="text-bone-faint">· {role.org}</span>
+              </li>
+            ))}
+          </motion.ul>
+
           {/* Name. The h1 carries both the name and the identity line so the
               document has exactly one h1 and it says who this is. */}
           <motion.h1
