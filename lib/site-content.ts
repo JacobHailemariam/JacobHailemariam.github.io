@@ -213,7 +213,25 @@ export const projects: Project[] = [
         href: "https://www.youtube.com/watch?v=p5cgfG4k0kc",
       },
     ],
-    images: [],
+    images: [
+      {
+        src: "/images/citylink-dispatch.webp",
+        alt: "CityLink running: a 3-D model of downtown Calgary at night with simulated traffic on the streets, a stats bar across the top, and a Dispatch & Calls panel in the corner where crew updates are typed or spoken in.",
+        caption:
+          "The dispatch view: simulated traffic over a 3-D model of downtown Calgary, with crew updates coming in through the Dispatch & Calls panel.",
+        width: 1908,
+        height: 952,
+        display: { aspect: "aspect-[1908/952]", fit: "contain" },
+      },
+      {
+        src: "/images/citylink-team.jpg",
+        alt: "The four-person CityLink team presenting on stage with microphones, the CityLink 3-D city view projected on the screen behind them.",
+        caption: "Presenting CityLink at the IEEE Industry Hackathon.",
+        width: 1280,
+        height: 853,
+        display: { aspect: "aspect-[3/2]", fit: "cover" },
+      },
+    ],
   },
   {
     id: "robot-arm",
@@ -237,89 +255,6 @@ export const projects: Project[] = [
     liveUrl: null,
     linkNote: "Currently in progress. Results and repository to follow.",
     images: [],
-  },
-  {
-    id: "vit",
-    title: "Vision Transformer for CIFAR-10, from scratch",
-    context: "Personal research build",
-    summary:
-      "A 13.4M-parameter ViT written from the patch embedding up in PyTorch — no convolutions, no pretrained weights — reaching 89.63% test accuracy on CIFAR-10.",
-    detail: [
-      "Patch embedding, CLS token, learned positional encoding, and seven pre-LayerNorm self-attention blocks with stochastic depth.",
-      "Trained with the modern recipe: MixUp/CutMix, EMA weights, RandAugment, label smoothing, mixed precision, and a cosine schedule with warmup.",
-    ],
-    metrics: [
-      { value: "89.63%", label: "test accuracy" },
-      { value: "13.4M", label: "parameters" },
-      { value: "0", label: "pretrained weights" },
-    ],
-    tech: [
-      "PyTorch",
-      "Vision Transformer",
-      "MixUp / CutMix",
-      "EMA",
-      "AMP",
-      "Python",
-    ],
-    repoUrl: "https://github.com/JacobHailemariam/cifar10-vision-transformer",
-    liveUrl: null,
-    images: [
-      {
-        src: "/images/vit-loss.png",
-        alt: "Training and validation loss over 190 epochs. Validation loss falls smoothly from about 2.1 to 0.76 and stays below the noisier training loss; the best epoch by validation loss is 170.",
-        caption:
-          "Training vs validation loss. Validation sits below training because MixUp/CutMix and stochastic depth only apply at train time. Best epoch: 170.",
-        width: 824,
-        height: 412,
-        display: { aspect: "aspect-[2/1]", fit: "contain" },
-      },
-      {
-        src: "/images/vit-confusion.png",
-        alt: "Row-normalised confusion matrix across the ten CIFAR-10 classes for the best EMA model. Automobile is highest at 95.7 percent; cat is lowest at 76.7 percent, with 10.7 percent misread as dog and 11.2 percent of dogs misread as cat.",
-        caption:
-          "Per-class confusion, best EMA weights on the test set. Cat and dog are the hard pair — about 11% of each is mistaken for the other.",
-        width: 1176,
-        height: 960,
-        display: { aspect: "aspect-[1176/960]", fit: "contain" },
-      },
-    ],
-  },
-  {
-    id: "url-shortener",
-    title: "URL shortener with cache-aside and rate limiting",
-    context: "Backend systems build",
-    summary:
-      "A FastAPI REST service that shortens URLs behind a Redis cache-aside layer and a per-client fixed-window rate limiter, containerised with Docker Compose.",
-    detail: [
-      "Redis serves hot redirects so Postgres is never touched on a cache hit; misses write back with a one-hour TTL.",
-      "The limiter keys an atomic counter per client IP with a 60-second expiry — the expiry is the window. Over-limit requests get an HTTP 429.",
-    ],
-    metrics: [
-      { value: "1,114", label: "req/s sustained" },
-      { value: "40 ms", label: "p50 latency" },
-      { value: "0 / 2000", label: "failed requests" },
-    ],
-    tech: [
-      "FastAPI",
-      "PostgreSQL",
-      "Redis",
-      "Docker Compose",
-      "SQLAlchemy",
-      "REST",
-    ],
-    repoUrl: "https://github.com/JacobHailemariam/url-shortener",
-    // No demo is deployed yet. See "Deploying the live API demo" in the README.
-    liveUrl: null,
-    images: [
-      {
-        src: "/images/url-shortener-docs.png",
-        alt: "Auto-generated Swagger UI for the URL Shortener API, showing the health-check endpoint and the POST /shorten endpoint expanded with its long_url JSON request body.",
-        caption: "Auto-generated OpenAPI docs at /docs.",
-        width: 1280,
-        height: 660,
-        display: { aspect: "aspect-[1280/660]", fit: "contain" },
-      },
-    ],
   },
   {
     id: "enginquire",
@@ -412,6 +347,89 @@ export const projects: Project[] = [
           "Schematic capture: L7805 regulator into the Pico, four switches in, four LEDs out.",
         width: 1658,
         height: 900,
+      },
+    ],
+  },
+  {
+    id: "vit",
+    title: "Vision Transformer for CIFAR-10, from scratch",
+    context: "Personal research build",
+    summary:
+      "A 13.4M-parameter ViT written from the patch embedding up in PyTorch — no convolutions, no pretrained weights — reaching 89.63% test accuracy on CIFAR-10.",
+    detail: [
+      "Patch embedding, CLS token, learned positional encoding, and seven pre-LayerNorm self-attention blocks with stochastic depth.",
+      "Trained with the modern recipe: MixUp/CutMix, EMA weights, RandAugment, label smoothing, mixed precision, and a cosine schedule with warmup.",
+    ],
+    metrics: [
+      { value: "89.63%", label: "test accuracy" },
+      { value: "13.4M", label: "parameters" },
+      { value: "0", label: "pretrained weights" },
+    ],
+    tech: [
+      "PyTorch",
+      "Vision Transformer",
+      "MixUp / CutMix",
+      "EMA",
+      "AMP",
+      "Python",
+    ],
+    repoUrl: "https://github.com/JacobHailemariam/cifar10-vision-transformer",
+    liveUrl: null,
+    images: [
+      {
+        src: "/images/vit-loss.png",
+        alt: "Training and validation loss over 190 epochs. Validation loss falls smoothly from about 2.1 to 0.76 and stays below the noisier training loss; the best epoch by validation loss is 170.",
+        caption:
+          "Training vs validation loss. Validation sits below training because MixUp/CutMix and stochastic depth only apply at train time. Best epoch: 170.",
+        width: 824,
+        height: 412,
+        display: { aspect: "aspect-[2/1]", fit: "contain" },
+      },
+      {
+        src: "/images/vit-confusion.png",
+        alt: "Row-normalised confusion matrix across the ten CIFAR-10 classes for the best EMA model. Automobile is highest at 95.7 percent; cat is lowest at 76.7 percent, with 10.7 percent misread as dog and 11.2 percent of dogs misread as cat.",
+        caption:
+          "Per-class confusion, best EMA weights on the test set. Cat and dog are the hard pair — about 11% of each is mistaken for the other.",
+        width: 1176,
+        height: 960,
+        display: { aspect: "aspect-[1176/960]", fit: "contain" },
+      },
+    ],
+  },
+  {
+    id: "url-shortener",
+    title: "URL shortener with cache-aside and rate limiting",
+    context: "Backend systems build",
+    summary:
+      "A FastAPI REST service that shortens URLs behind a Redis cache-aside layer and a per-client fixed-window rate limiter, containerised with Docker Compose.",
+    detail: [
+      "Redis serves hot redirects so Postgres is never touched on a cache hit; misses write back with a one-hour TTL.",
+      "The limiter keys an atomic counter per client IP with a 60-second expiry — the expiry is the window. Over-limit requests get an HTTP 429.",
+    ],
+    metrics: [
+      { value: "1,114", label: "req/s sustained" },
+      { value: "40 ms", label: "p50 latency" },
+      { value: "0 / 2000", label: "failed requests" },
+    ],
+    tech: [
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "Docker Compose",
+      "SQLAlchemy",
+      "REST",
+    ],
+    repoUrl: "https://github.com/JacobHailemariam/url-shortener",
+    // No demo is deployed yet. See "Deploying the live API demo" in the README.
+    liveUrl: null,
+    images: [
+      {
+        src: "/images/url-shortener-docs.png",
+        alt: "Auto-generated Swagger UI for the URL Shortener API, showing the health-check endpoint and the POST /shorten endpoint expanded with its long_url JSON request body.",
+        caption: "Auto-generated OpenAPI docs at /docs.",
+        width: 1280,
+        height: 660,
+        display: { aspect: "aspect-[1280/660]", fit: "contain" },
       },
     ],
   },
