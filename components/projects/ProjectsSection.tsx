@@ -14,7 +14,7 @@ export default function ProjectsSection() {
     <SectionShell
       id="work"
       heading="Work"
-      deck="Research, backend systems, a venture, and a board I routed myself. Numbers below are measured, not estimated."
+      deck="Research, a hackathon win, a robot arm in progress, backend systems, a venture, and a board I routed myself. Numbers below are measured, not estimated."
     >
       <FeaturedProject project={featuredProject} />
 

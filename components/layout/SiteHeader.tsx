@@ -114,19 +114,6 @@ export default function SiteHeader() {
                 </li>
               );
             })}
-            {/* Not a section, so it sits outside the scroll spy. Styled as a
-                quiet outlined pill so it reads as an action, not a place. */}
-            <li>
-              <a
-                href={profile.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-1 block rounded-full border border-ink-ruleHi px-3 py-1.5 text-meta text-bone-muted transition-colors duration-200 ease-signature hover:border-ember hover:text-ember sm:ml-2 sm:px-4"
-              >
-                Resume
-                <span className="sr-only"> (PDF, opens in a new tab)</span>
-              </a>
-            </li>
           </ul>
         </nav>
       </div>

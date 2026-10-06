@@ -90,8 +90,6 @@ export const profile = {
   email: "jacob.hailemariam@ucalgary.ca",
   github: "https://github.com/JacobHailemariam",
   linkedin: "https://www.linkedin.com/in/jacob-hailemariam",
-  /** Served from /public. Replace the PDF in place to update it. */
-  resume: "/Jacob-Hailemariam-Resume.pdf",
   /** Current roles, shown above the name. Keep each one short. */
   roles: [
     { title: "Machine Learning Researcher", org: "UCalgary GSIL" },
@@ -190,6 +188,56 @@ export const featuredProject: Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "citylink",
+    title: "CityLink: AI dispatch agent for Calgary 311",
+    context: "IEEE Industry Hackathon · 2nd place of 200+ · team of four",
+    summary:
+      "An agent that scores Calgary 311 road tickets by hazard and plans the day for 8 city crews. It covered all 30 open safety tickets, where oldest-first covered 16, and fit 48 jobs into the day instead of 40 with the same workers.",
+    detail: [
+      "A scikit-learn model ranks each ticket by hazard, and a planner assigns the ranked jobs across the crews' day.",
+      "The Claude API turns free-text crew updates into structured events and writes the supervisor's briefing. A rule-based fallback runs if the API fails, and a person confirms every replan before it goes out.",
+    ],
+    metrics: [
+      { value: "2nd", label: "of 200+ participants" },
+      { value: "30 / 30", label: "safety tickets, vs 16 oldest-first" },
+      { value: "48", label: "jobs per day, vs 40" },
+    ],
+    tech: ["Python", "scikit-learn", "Claude API", "Streamlit", "LLM agents"],
+    repoUrl:
+      "https://github.com/ColbyCadden/IEEE-Industry-Hackathon---Dispatch-agent",
+    liveUrl: null,
+    extraLinks: [
+      {
+        label: "Watch the demo",
+        href: "https://www.youtube.com/watch?v=p5cgfG4k0kc",
+      },
+    ],
+    images: [],
+  },
+  {
+    id: "robot-arm",
+    title: "Imitation-learning robot arm",
+    context: "In progress · ML & perception lead · 5-person team",
+    summary:
+      "A 6-DOF SO-101 arm that learns a pick-and-place task from about 50 teleoperated demonstrations, instead of from hand-written motion code. I lead the ML, perception, and integration.",
+    detail: [
+      "I'm building the pipeline that records synced video from two cameras alongside the arm's joint states, then trains an Action Chunking Transformer (ACT) policy in PyTorch on Linux GPU servers.",
+      "Next: evaluating the learned policy over 50 trials against a scripted OpenCV ArUco baseline, so the comparison shows what learning from demonstration actually buys.",
+    ],
+    tech: [
+      "PyTorch",
+      "LeRobot",
+      "ACT policy",
+      "Imitation learning",
+      "OpenCV",
+      "Python",
+    ],
+    repoUrl: null,
+    liveUrl: null,
+    linkNote: "Currently in progress. Results and repository to follow.",
+    images: [],
+  },
   {
     id: "vit",
     title: "Vision Transformer for CIFAR-10, from scratch",

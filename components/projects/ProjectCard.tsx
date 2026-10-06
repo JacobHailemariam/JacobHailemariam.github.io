@@ -31,13 +31,20 @@ type ProjectCardProps = {
  */
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const isReversed = index % 2 === 1;
+  // A project with no images yet gets the full row for its text rather than
+  // an empty column beside it.
+  const hasImages = project.images.length > 0;
 
   return (
     <article className="group border-t border-ink-rule pt-12 transition-colors duration-300 ease-signature hover:border-ink-ruleHi">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
         {/* ── Text column ──────────────────────────────────────────────── */}
         <Reveal
-          className={`lg:col-span-5 ${isReversed ? "lg:order-2" : "lg:order-1"}`}
+          className={
+            hasImages
+              ? `lg:col-span-5 ${isReversed ? "lg:order-2" : "lg:order-1"}`
+              : "lg:col-span-12"
+          }
         >
           <p className="text-meta text-bone-faint">{project.context}</p>
 
@@ -98,24 +105,26 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         </Reveal>
 
         {/* ── Image column ─────────────────────────────────────────────── */}
-        <Reveal
-          delay={0.08}
-          className={`lg:col-span-7 ${isReversed ? "lg:order-1" : "lg:order-2"}`}
-        >
-          <div className="space-y-6">
-            {project.images.map((image) => (
-              <AssetImage
-                key={image.alt}
-                asset={image}
-                // Defaults suit screenshots and diagrams: never crop, always
-                // 16:9. Photographs override both from the content file.
-                defaultAspect="aspect-[16/9]"
-                defaultFit="contain"
-                sizes="(max-width: 1024px) 100vw, 46rem"
-              />
-            ))}
-          </div>
-        </Reveal>
+        {hasImages ? (
+          <Reveal
+            delay={0.08}
+            className={`lg:col-span-7 ${isReversed ? "lg:order-1" : "lg:order-2"}`}
+          >
+            <div className="space-y-6">
+              {project.images.map((image) => (
+                <AssetImage
+                  key={image.alt}
+                  asset={image}
+                  // Defaults suit screenshots and diagrams: never crop, always
+                  // 16:9. Photographs override both from the content file.
+                  defaultAspect="aspect-[16/9]"
+                  defaultFit="contain"
+                  sizes="(max-width: 1024px) 100vw, 46rem"
+                />
+              ))}
+            </div>
+          </Reveal>
+        ) : null}
       </div>
     </article>
   );

@@ -60,17 +60,6 @@ export default function ContactSection() {
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
-          <li>
-            <a
-              href={profile.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-body text-bone-muted transition-colors duration-200 ease-signature hover:text-ember"
-            >
-              Resume (PDF)
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </li>
         </ul>
       </Reveal>
     </SectionShell>
