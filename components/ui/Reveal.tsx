@@ -16,11 +16,9 @@ type RevealProps = {
 /**
  * The site's only scroll-triggered animation.
  *
- * Design note: this is deliberately understated — 14px of rise and an opacity
- * fade, once, and then it never runs again (`once: true`). A portfolio where
- * every element swoops in from a different direction reads as a template. The
- * one genuinely expressive animation on this site lives in the hero, and
- * spending the boldness in a single place is what lets it land.
+ * Deliberately understated: 14px of rise and an opacity fade, once, and then
+ * it never runs again (`once: true`). The site's one expressive animation is
+ * in the hero.
  *
  * Accessibility: if the visitor has asked their OS for reduced motion,
  * useReducedMotion() returns true and we render a plain element with no

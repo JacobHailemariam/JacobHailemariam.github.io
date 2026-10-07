@@ -4,8 +4,8 @@ import Reveal from "@/components/ui/Reveal";
 import { about, profile } from "@/lib/site-content";
 
 /**
- * A 5/7 split: photo left, prose right. Not 6/6 — a perfectly even split reads
- * as a template, and the prose genuinely needs more room than the portrait.
+ * A 5/7 split: photo left, prose right. The prose needs more room than the
+ * portrait, so the columns are deliberately uneven.
  *
  * The portrait is deliberately small and square rather than a full-bleed
  * lifestyle shot. This is a page about work; the photo's job is to attach a

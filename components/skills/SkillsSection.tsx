@@ -5,14 +5,10 @@ import { skillGroups } from "@/lib/site-content";
 /**
  * Four groups in a 2×2 on desktop, stacked on mobile.
  *
- * Two decisions worth defending:
- *
- * NO LOGOS. The brief allowed tech logos, and a grid of them is the reflexive
- * choice — but it introduces twenty foreign brand colours into a palette
- * built on exactly two accents, and it reads as a badge collection rather
- * than a claim about capability. Set words instead, in the site's own type,
- * and the section stays part of the same designed object. (If you want the
- * logos, the note in the README explains where to add them.)
+ * NO LOGOS. A grid of tech logos would introduce twenty brand colours into a
+ * palette built on two accents. Skills are set as words in the site's own
+ * type instead. (To add logos, give SkillGroup an `icon` field and render it
+ * here.)
  *
  * EACH GROUP GETS A LINE OF CONTEXT. A bare tag cloud tells a recruiter
  * nothing they can't already infer from the projects. One sentence per group

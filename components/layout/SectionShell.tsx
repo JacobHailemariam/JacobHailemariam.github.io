@@ -12,15 +12,12 @@ type SectionShellProps = {
 };
 
 /**
- * Every section below the hero renders through this, which is what makes the
- * page feel like one designed object rather than five stitched-together
- * templates. Vertical rhythm, heading scale, and the hairline rule are all
- * decided here, once.
+ * Every section below the hero renders through this, so vertical rhythm,
+ * heading scale, and the hairline rule are all decided in one place.
  *
  * The heading treatment: an asymmetric two-column split with the title left
- * and a one-line deck right. Notably absent is the tracked-out all-caps
- * eyebrow label above every heading — it's the single most common tell of a
- * generated page, and it adds no information the heading doesn't already give.
+ * and a one-line deck right. There is no all-caps eyebrow label above the
+ * heading; it would add no information the heading doesn't already give.
  *
  * Accessibility: each section is a landmark labelled by its own <h2>, so a
  * screen-reader user can jump between sections by landmark.

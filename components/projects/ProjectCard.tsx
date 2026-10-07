@@ -10,8 +10,7 @@ type ProjectCardProps = {
 };
 
 /**
- * Three identical cards in a row is the most recognisable shape in generated
- * portfolio design, so this component does the opposite in two ways.
+ * Project layout, designed to avoid a grid of identical cards:
  *
  * 1. ALTERNATING ORIENTATION. Text and imagery swap sides on each card. The
  *    reader's eye zig-zags down the page instead of scanning three columns.
@@ -24,10 +23,8 @@ type ProjectCardProps = {
  * is both the correct reading order for a screen reader and the correct
  * stacking order on a phone.
  *
- * Hover is intentionally almost nothing: the title picks up amber and the
- * frame's border lightens. No lift, no shadow, no scale. Those are fine
- * effects individually but applying them to every card is what makes a page
- * feel like it came out of a kit.
+ * Hover is intentionally subtle: the title picks up amber and the frame's
+ * border lightens. No lift, no shadow, no scale.
  */
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const isReversed = index % 2 === 1;

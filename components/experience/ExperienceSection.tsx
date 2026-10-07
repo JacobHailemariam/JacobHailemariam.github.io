@@ -5,11 +5,9 @@ import { experience } from "@/lib/site-content";
 /**
  * The only place on the site with a vertical spine and node markers.
  *
- * That restraint is the point. Timeline rails, connector lines, and numbered
- * markers get sprayed across generated pages onto content that isn't a
- * sequence at all — a skills list doesn't have a first and a last. Roles over
- * time genuinely do, so here the rail encodes real information: reverse
- * chronology, and how recent each thing is.
+ * A timeline only makes sense for content that is actually a sequence. A
+ * skills list has no first and last; roles over time do, so here the rail
+ * encodes real information: reverse chronology, and how recent each thing is.
  *
  * Markup is an ordered list, because that's what this is. The rail itself is
  * aria-hidden decoration drawn over the list's left edge.
