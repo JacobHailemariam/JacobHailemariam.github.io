@@ -8,9 +8,9 @@ import SiteFooter from "@/components/layout/SiteFooter";
 const SITE_URL = "https://jacobhailemariam.github.io";
 
 /**
- * The link-preview card. The image is the homepage portrait centred on a
- * 1200×630 canvas (public/preview.png). Its URL is written out in full because
- * some scrapers ignore relative og:image paths.
+ * The link-preview card. The image is a 1200×630 screenshot of the fusion
+ * explorer in its "Fused" state (public/preview.png). Its URL is written out in
+ * full because some scrapers ignore relative og:image paths.
  */
 const PREVIEW_IMAGE = `${SITE_URL}/preview.png`;
 const PREVIEW_DESCRIPTION =
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         url: PREVIEW_IMAGE,
         width: 1200,
         height: 630,
-        alt: profile.headshot.alt,
+        alt: "Interactive isometric city classified by fusing hyperspectral and LiDAR data, at 99.6% accuracy.",
       },
     ],
   },
