@@ -5,6 +5,17 @@ import { profile } from "@/lib/site-content";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 
+const SITE_URL = "https://jacobhailemariam.github.io";
+
+/**
+ * The link-preview card. The image is the homepage portrait centred on a
+ * 1200×630 canvas (public/preview.png). Its URL is written out in full because
+ * some scrapers ignore relative og:image paths.
+ */
+const PREVIEW_IMAGE = `${SITE_URL}/preview.png`;
+const PREVIEW_DESCRIPTION =
+  "Electrical and Computer Engineering student at the University of Calgary";
+
 /**
  * Metadata is generated from lib/site-content so the browser tab, the search
  * result, and the Slack/LinkedIn link preview all stay in sync with the page
@@ -12,7 +23,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
  * the first impression, before anyone loads the site.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jacobhailemariam.github.io"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${profile.name} — ${profile.identity}`,
     template: `%s — ${profile.name}`,
@@ -28,15 +39,25 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: profile.name, url: profile.github }],
   openGraph: {
-    type: "profile",
-    title: `${profile.name} — ${profile.identity}`,
-    description: profile.tagline,
+    type: "website",
+    url: SITE_URL,
+    title: profile.name,
+    description: PREVIEW_DESCRIPTION,
     siteName: profile.name,
+    images: [
+      {
+        url: PREVIEW_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: profile.headshot.alt,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — ${profile.identity}`,
-    description: profile.tagline,
+    title: profile.name,
+    description: PREVIEW_DESCRIPTION,
+    images: [PREVIEW_IMAGE],
   },
   robots: { index: true, follow: true },
 };
