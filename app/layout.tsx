@@ -9,10 +9,10 @@ const SITE_URL = "https://jacobhailemariam.github.io";
 
 /**
  * The link-preview card. The image is a 1200×630 screenshot of the fusion
- * explorer in its "Fused" state (public/preview.png). Its URL is written out in
+ * explorer in its "Fused" state (public/og-fusion.png). Its URL is written out in
  * full because some scrapers ignore relative og:image paths.
  */
-const PREVIEW_IMAGE = `${SITE_URL}/preview.png`;
+const PREVIEW_IMAGE = `${SITE_URL}/og-fusion.png`;
 const PREVIEW_DESCRIPTION =
   "Electrical and Computer Engineering student at the University of Calgary";
 
