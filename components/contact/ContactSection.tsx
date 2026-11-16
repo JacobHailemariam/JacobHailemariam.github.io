@@ -18,7 +18,7 @@ export default function ContactSection() {
       id="contact"
       index={4}
       heading="Contact"
-      deck="Open to Summer 2027 internships in software engineering, ML, or anything where the model has to run on real hardware. Say hello."
+      deck="Open to Summer 2027 internships in software engineering, ML, or anything where the model has to run on real hardware. Open to relocation. Say hello."
     >
       <div className="grid grid-cols-1 gap-12 border-t border-ink-ruleHi pt-10 lg:grid-cols-12 lg:gap-0">
         <Reveal className="min-w-0 lg:col-span-8 lg:pr-14">

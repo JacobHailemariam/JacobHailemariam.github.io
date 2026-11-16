@@ -183,7 +183,7 @@ export default function HeroSection() {
           </div>
           <p className="label mt-3 flex justify-between text-bone-faint">
             <span>{profile.location}</span>
-            <span>ECE</span>
+            <span>Open to relocation</span>
           </p>
         </div>
       </div>
