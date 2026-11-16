@@ -8,7 +8,19 @@ const nextConfig = {
    * time has to happen at build time instead. This site has no API routes, no
    * server actions, and no server-side data fetching, so nothing is lost.
    */
-  output: "export",
+  /**
+   * Only for production builds. In `next dev` on Windows, static export
+   * wrongly reports dynamic pages (app/projects/[id]) as missing
+   * generateStaticParams, so the dev server runs as a normal Next.js app.
+   * `npm run build` still writes the full static site to out/.
+   */
+  output: process.env.NODE_ENV === "production" ? "export" : undefined,
+
+  /**
+   * Each page is written as folder/index.html, so /projects/atlas/ resolves
+   * on GitHub Pages without any server-side rewrites.
+   */
+  trailingSlash: true,
 
   reactStrictMode: true,
 

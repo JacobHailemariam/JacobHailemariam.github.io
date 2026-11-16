@@ -1,23 +1,22 @@
-import { Bricolage_Grotesque, Manrope, JetBrains_Mono } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Instrument_Sans,
+  JetBrains_Mono,
+} from "next/font/google";
 
 /**
  * next/font downloads these at build time and self-hosts them from your own
- * domain. That means: no request to fonts.googleapis.com at runtime, no
- * third-party round trip on first paint, and `display: "swap"` plus an
- * auto-generated size-adjusted fallback so text never jumps when the real
- * font lands. This is the single biggest font-related perf win available and
- * it costs one import.
+ * domain: no request to fonts.googleapis.com at runtime, and a size-adjusted
+ * fallback so text doesn't jump when the real font lands.
  *
  * Each font exposes a CSS variable, which tailwind.config.ts maps to
  * font-display / font-sans / font-mono.
  */
 
 /**
- * DISPLAY — Bricolage Grotesque.
- * A variable grotesque with genuine character in the letterforms (that flat-
- * topped 'a', the tight apertures) without tipping into novelty. Chosen over
- * the usual Space Grotesk / Inter default because it still reads cleanly at
- * 8rem, which is where the hero puts it.
+ * DISPLAY: Bricolage Grotesque.
+ * A variable grotesque with real character in the letterforms. Set heavy and
+ * tight, it reads like lettering stamped on an equipment panel.
  */
 export const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -26,21 +25,19 @@ export const displayFont = Bricolage_Grotesque({
 });
 
 /**
- * BODY — Manrope.
- * Open counters, slightly geometric, quiet enough to sit under the display
- * face without competing. Comfortable down to 13px for metadata.
+ * BODY: Instrument Sans.
+ * Slightly condensed and precise, quiet enough to sit under the display face.
  */
-export const sansFont = Manrope({
+export const sansFont = Instrument_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
 /**
- * DATA — JetBrains Mono.
- * Reserved strictly for numbers that are measurements: accuracies, latencies,
- * parameter counts. Monospace signals "this is instrumentation output". Using
- * it for decorative labels would dilute that signal, so don't.
+ * READOUT: JetBrains Mono.
+ * Two jobs only: measured numbers, and the small uppercase labels that mark
+ * sections, channels and figures (the `.label` class). Never body copy.
  */
 export const monoFont = JetBrains_Mono({
   subsets: ["latin"],

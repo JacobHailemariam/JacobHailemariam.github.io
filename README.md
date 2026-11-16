@@ -2,7 +2,7 @@
 
 Personal portfolio site: [jacobhailemariam.github.io](https://jacobhailemariam.github.io)
 
-Built with Next.js (App Router), TypeScript, Tailwind CSS, and Framer Motion.
+Built with Next.js (App Router), TypeScript, and Tailwind CSS.
 Exported as a static site and deployed to GitHub Pages.
 
 ## Running locally
@@ -103,7 +103,7 @@ modelled on how hyperspectral and LiDAR sensors scan a scene.
 
 - Semantic landmarks; each section is labelled by its own `<h2>`.
 - Skip link as the first tab stop, and visible focus rings throughout.
-- `prefers-reduced-motion` is respected by Framer components, the canvas, and CSS.
+- `prefers-reduced-motion` is respected by the canvases and all CSS animation.
 - Images use `next/image` with intrinsic dimensions to avoid layout shift.
 - Fonts are self-hosted via `next/font`.
 - External links use `rel="noopener noreferrer"` and announce that they open in a new tab.

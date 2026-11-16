@@ -6,43 +6,50 @@
  *
  * Why this file exists rather than putting the hexes straight into
  * tailwind.config.ts: the hero's <canvas> paints with the 2D context, which
- * knows nothing about Tailwind classes — it needs literal colour strings at
- * runtime. Without a shared module you end up with the violet defined twice,
- * and the day you retune the accent, the canvas quietly keeps the old one.
+ * knows nothing about Tailwind classes. It needs literal colour strings at
+ * runtime. So this file is the source, tailwind.config.ts imports it, and the
+ * canvases import it. Change a value here and both follow.
  *
- * So: this file is the source, tailwind.config.ts imports it, and the canvas
- * imports it. Change a value here and both follow.
+ * THE TWO-CHANNEL RULE
+ * The site is drawn like a two-channel instrument. Exactly two colours carry
+ * meaning, and nothing else on the page is allowed colour:
  *
- * Names describe ROLE, not hue, so swapping violet for teal doesn't turn every
- * class name into a lie.
+ *   ch1 (teal)  → machine learning: models, training, research
+ *   ch2 (amber) → hardware: firmware, boards, embedded
+ *
+ * Everything else is graphite and bone. If a third hue shows up, or either
+ * channel starts being used as decoration, the system stops meaning anything.
  */
 
 export const palette = {
-  /** Backgrounds and hairlines, darkest to lightest. */
+  /** Backgrounds and hairlines, darkest to lightest. Cool graphite. */
   ink: {
-    void: "#0A0A0B",
-    panel: "#101014",
-    panelHi: "#16161B",
-    rule: "#1E1E25",
-    ruleHi: "#34343F",
+    void: "#0B0D10",
+    panel: "#11151A",
+    panelHi: "#171C22",
+    rule: "#222931",
+    ruleHi: "#3A434E",
   },
-  /** Text, brightest to dimmest. Never pure white — #EDEAE4 is warmer and
-   *  easier on the eye against near-black. */
+  /**
+   * Text, brightest to dimmest. All three pass WCAG AA (4.5:1) for body-size
+   * text on both `void` and `panel`; `faint` is the floor at about 5.5:1.
+   */
   bone: {
-    DEFAULT: "#EDEAE4",
-    muted: "#9A9AA6",
-    faint: "#63636E",
+    DEFAULT: "#E6E9EC",
+    muted: "#A6AEB8",
+    faint: "#828B96",
   },
-  /** Signature accent. Electric violet. */
-  volt: {
-    DEFAULT: "#7F5AF0",
-    hi: "#A78BFA",
-    lo: "#4C2FA8",
+  /** Channel 1. Machine learning. */
+  ch1: {
+    DEFAULT: "#3DDCC8",
+    hi: "#7DEBDD",
+    lo: "#1C7F74",
   },
-  /** Secondary accent. Warm gold — hover, focus, and pointer response only. */
-  ember: {
-    DEFAULT: "#F0B429",
-    hi: "#FFCE5C",
+  /** Channel 2. Hardware and embedded. */
+  ch2: {
+    DEFAULT: "#FFB224",
+    hi: "#FFCB66",
+    lo: "#9A6A0F",
   },
 };
 

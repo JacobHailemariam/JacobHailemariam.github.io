@@ -1,67 +1,77 @@
 import SectionShell from "@/components/layout/SectionShell";
 import Reveal from "@/components/ui/Reveal";
-import { profile } from "@/lib/site-content";
+import { ActionLink } from "@/components/ui/Primitives";
+import { profile, resume } from "@/lib/site-content";
 
 /**
- * The email is set at display size and is itself the button. A recruiter who
- * has scrolled this far has already decided; the only thing left to do is make
- * the address impossible to miss and one tap away on a phone.
+ * Two columns under the big heading, split by a hairline on wide screens.
+ * Left: the email, set large, and itself the button. Right: the other ways
+ * to reach me and, when a resume is configured, the download.
  *
- * `mailto:` rather than a contact form: a form needs a backend, an anti-spam
- * story, and a delivery guarantee, and it puts a step between the visitor and
- * the inbox. A recruiter would rather have the address anyway — they usually
- * want it in their own client so it threads with the rest of their pipeline.
+ * `mailto:` rather than a contact form: a form needs a backend and an
+ * anti-spam story, and a recruiter usually wants the address in their own
+ * mail client anyway.
  */
 export default function ContactSection() {
   return (
     <SectionShell
       id="contact"
-      heading="Open to Summer 2027 internships"
-      deck="Software engineering, ML, or anything where the model has to run on real hardware. Say hello."
+      index={4}
+      heading="Contact"
+      deck="Open to Summer 2027 internships in software engineering, ML, or anything where the model has to run on real hardware. Say hello."
     >
-      <Reveal>
-        <a
-          href={`mailto:${profile.email}`}
-          className="group inline-block max-w-full"
-        >
-          <span className="block break-words font-display text-[clamp(1.5rem,5.5vw,3.5rem)] font-semibold leading-tight tracking-tight text-bone transition-colors duration-300 ease-signature group-hover:text-ember">
-            {profile.email}
-          </span>
-          {/* A rule that draws itself in on hover. The one hover flourish on
-              the page, spent on the single action that matters most. */}
-          <span
-            aria-hidden="true"
-            className="mt-3 block h-px w-full origin-left scale-x-0 bg-ember transition-transform duration-500 ease-signature group-hover:scale-x-100"
-          />
-        </a>
-      </Reveal>
+      <div className="grid grid-cols-1 gap-12 border-t border-ink-ruleHi pt-10 lg:grid-cols-12 lg:gap-0">
+        <Reveal className="min-w-0 lg:col-span-8 lg:pr-14">
+          <a
+            href={`mailto:${profile.email}`}
+            className="group inline-block max-w-full"
+          >
+            <span className="label block text-bone-faint">Email</span>
+            <span className="mt-3 block break-words font-display text-[clamp(1.375rem,4.4vw,3rem)] font-semibold leading-tight tracking-tight text-bone">
+              {profile.email}
+            </span>
+            {/* A rule that draws itself in on hover, spent on the single
+                action that matters most. */}
+            <span
+              aria-hidden="true"
+              className="mt-3 block h-px w-full origin-left scale-x-0 bg-bone transition-transform duration-500 ease-signature group-hover:scale-x-100"
+            />
+          </a>
+          <p className="mt-5 text-lede text-bone-muted">
+            or{" "}
+            <a
+              href={`mailto:${profile.altEmail}`}
+              className="break-words text-bone underline decoration-ink-ruleHi underline-offset-4 transition-colors hover:decoration-bone"
+            >
+              {profile.altEmail}
+            </a>
+          </p>
+        </Reveal>
 
-      <Reveal delay={0.08}>
-        <ul className="mt-14 flex flex-wrap gap-x-10 gap-y-4">
-          <li>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-body text-bone-muted transition-colors duration-200 ease-signature hover:text-ember"
-            >
+        <Reveal
+          delay={0.08}
+          className="lg:col-span-4 lg:border-l lg:border-ink-rule lg:pl-10"
+        >
+          <p className="label text-bone-faint">Elsewhere</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {resume ? (
+              <ActionLink
+                href={resume.href}
+                download={resume.fileName}
+                variant="solid"
+              >
+                Download resume
+              </ActionLink>
+            ) : null}
+            <ActionLink href={profile.github} external>
               GitHub
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-body text-bone-muted transition-colors duration-200 ease-signature hover:text-ember"
-            >
+            </ActionLink>
+            <ActionLink href={profile.linkedin} external>
               LinkedIn
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </li>
-        </ul>
-      </Reveal>
+            </ActionLink>
+          </div>
+        </Reveal>
+      </div>
     </SectionShell>
   );
 }

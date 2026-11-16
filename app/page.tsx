@@ -2,16 +2,15 @@ import HeroSection from "@/components/hero/HeroSection";
 import ProjectsSection from "@/components/projects/ProjectsSection";
 import ExperienceSection from "@/components/experience/ExperienceSection";
 import SkillsSection from "@/components/skills/SkillsSection";
-import AboutSection from "@/components/about/AboutSection";
 import ContactSection from "@/components/contact/ContactSection";
 
 /**
  * ORDERING
  *
- * Work comes before About, so projects and results are the first thing a
- * visitor sees.
+ * Work comes first, so projects and results are the first thing a visitor
+ * sees.
  *
- * Skills sits between Experience and About as the bridge — it's the section
+ * Skills sits between Experience and Contact as the bridge — it's the section
  * that makes the electrical/embedded half impossible to overlook, right after
  * the timeline has established where each half was practised.
  *
@@ -26,7 +25,6 @@ export default function HomePage() {
       <ProjectsSection />
       <ExperienceSection />
       <SkillsSection />
-      <AboutSection />
       <ContactSection />
     </>
   );

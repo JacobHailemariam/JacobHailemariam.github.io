@@ -1,58 +1,84 @@
 "use client";
 
-import { createElement, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { SIGNATURE_EASE } from "@/lib/motion";
+import {
+  createElement,
+  useEffect,
+  useRef,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 type RevealProps = {
   children: ReactNode;
-  /** Seconds to wait before starting. Use for small staggers within a group. */
+  /** Seconds to wait before starting. Use for small offsets within a group. */
   delay?: number;
+  /** Instead of moving as one block, the direct children arrive in order. */
+  stagger?: boolean;
   className?: string;
   /** Renders as this element instead of a div. Keeps markup semantic. */
-  as?: "div" | "li" | "article" | "section";
+  as?: "div" | "li" | "article" | "section" | "ol" | "ul" | "dl";
 };
 
 /**
- * The site's only scroll-triggered animation.
+ * One IntersectionObserver for the whole page, shared by every <Reveal>.
+ * It runs off the main thread and only calls back when an element crosses
+ * into view, so scrolling never waits on JavaScript.
+ */
+let sharedObserver: IntersectionObserver | null = null;
+
+function getObserver(): IntersectionObserver {
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.setAttribute("data-revealed", "");
+          sharedObserver?.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -6% 0px", threshold: 0 },
+    );
+  }
+  return sharedObserver;
+}
+
+/**
+ * The site's scroll-triggered animation: a short rise and fade, once.
  *
- * Deliberately understated: 14px of rise and an opacity fade, once, and then
- * it never runs again (`once: true`). The site's one expressive animation is
- * in the hero.
- *
- * Accessibility: if the visitor has asked their OS for reduced motion,
- * useReducedMotion() returns true and we render a plain element with no
- * Framer wrapper at all. Not a shortened animation — no animation, and no
- * animation library in the render path either.
- *
- * `createElement` rather than `<Tag />`: assigning a string-union to a
- * capitalised variable and rendering it works, but TypeScript's inference on
- * that pattern is fragile and breaks in confusing ways when the union grows.
- * createElement is explicit and always correct.
+ * This component only does one thing in JavaScript: it sets `data-revealed`
+ * on the element the first time it scrolls into view. The animation itself is
+ * CSS (see "SCROLL REVEALS" in globals.css), which is also where reduced
+ * motion and the no-JavaScript fallback are handled.
  */
 export default function Reveal({
   children,
   delay = 0,
+  stagger = false,
   className,
   as = "div",
 }: RevealProps) {
-  const prefersReducedMotion = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
 
-  if (prefersReducedMotion) {
-    return createElement(as, { className }, children);
-  }
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = getObserver();
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }, []);
 
-  const MotionTag = motion[as];
+  const style = delay
+    ? ({ "--reveal-delay": `${Math.round(delay * 1000)}ms` } as CSSProperties)
+    : undefined;
 
-  return (
-    <MotionTag
-      className={className}
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: SIGNATURE_EASE }}
-    >
-      {children}
-    </MotionTag>
+  return createElement(
+    as,
+    {
+      ref,
+      className,
+      style,
+      "data-reveal": stagger ? "stagger" : "",
+    },
+    children,
   );
 }

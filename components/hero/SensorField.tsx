@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { palette, withAlpha } from "@/lib/palette";
 
 /* ── Tuning constants ─────────────────────────────────────────────────────── */
@@ -128,7 +128,7 @@ export default function SensorField() {
       } else {
         // Fade from the deep violet through to the bright one as energy rises,
         // so the leading edge of the sweep is visibly hotter than its trail.
-        const color = energy > 0.55 ? palette.volt.hi : palette.volt.DEFAULT;
+        const color = energy > 0.55 ? palette.ch1.hi : palette.ch1.DEFAULT;
         context.fillStyle = withAlpha(color, 0.25 + energy * 0.75);
       }
 
@@ -190,7 +190,7 @@ export default function SensorField() {
             // Drawn immediately and separately so it layers over the sweep
             // rather than being averaged into it.
             context.fillStyle = withAlpha(
-              palette.ember.DEFAULT,
+              palette.ch2.DEFAULT,
               proximity * 0.85,
             );
             context.beginPath();

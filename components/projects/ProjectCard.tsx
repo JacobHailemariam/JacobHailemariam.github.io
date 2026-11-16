@@ -1,128 +1,124 @@
-import AssetImage from "@/components/ui/AssetImage";
+import Image from "next/image";
 import Reveal from "@/components/ui/Reveal";
-import { TechTagList, MetricRow, ActionLink } from "@/components/ui/Primitives";
+import {
+  ChannelMetaLine,
+  ReadMoreLink,
+  TechTagList,
+} from "@/components/ui/Primitives";
 import type { Project } from "@/lib/site-content";
 
 type ProjectCardProps = {
   project: Project;
-  /** Even-indexed cards put text left; odd-indexed put it right. */
+  /** Position in the grid. The featured project is 01, so cards start at 02. */
   index: number;
 };
 
+/** A small outbound link in the card's footer row. */
+function FooterLink({ href, children }: { href: string; children: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="label inline-flex min-h-[2.75rem] items-center gap-1.5 text-bone-muted transition-colors duration-200 ease-signature hover:text-bone"
+    >
+      {children}
+      <span aria-hidden="true">↗</span>
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
+
 /**
- * Project layout, designed to avoid a grid of identical cards:
+ * A project as a card in a two-column grid.
  *
- * 1. ALTERNATING ORIENTATION. Text and imagery swap sides on each card. The
- *    reader's eye zig-zags down the page instead of scanning three columns.
+ * THE FACE stays short so a grid of six reads at a glance: one image across
+ * the top, a mono meta line (number, channels, where), the title, a one or
+ * two sentence summary, the tech as small boxed tags, and a footer row with
+ * "Read more" on the left and outbound links on the right.
  *
- * 2. ASYMMETRIC SPLIT. 5/7, never 6/6. The image side gets more room because
- *    a screenshot needs it and a paragraph doesn't.
+ * "Read more" opens the project's own page (app/projects/[id]), which holds
+ * everything else: problem, decision and impact, the numbers, every image,
+ * and the case study if the project has one.
  *
- * The `lg:order-*` classes handle the swap on desktop while leaving the mobile
- * DOM order alone — text always comes before its images in the source, which
- * is both the correct reading order for a screen reader and the correct
- * stacking order on a phone.
- *
- * Hover is intentionally subtle: the title picks up amber and the frame's
- * border lightens. No lift, no shadow, no scale.
+ * HOVER. The frame's corner ticks lengthen, a hairline draws under the title,
+ * and a photograph eases in slightly. No lift, no shadow.
  */
 export default function ProjectCard({ project, index }: ProjectCardProps) {
-  const isReversed = index % 2 === 1;
-  // A project with no images yet gets the full row for its text rather than
-  // an empty column beside it.
-  const hasImages = project.images.length > 0;
+  const number = String(index + 2).padStart(2, "0");
+  const [cover] = project.images;
+  const coverFit = cover?.display?.fit ?? "contain";
+
+  const links = [
+    project.liveUrl ? { label: "Live", href: project.liveUrl } : null,
+    ...(project.extraLinks ?? []),
+    project.repoUrl ? { label: "Repository", href: project.repoUrl } : null,
+  ].filter((link): link is { label: string; href: string } => link !== null);
 
   return (
-    <article className="group border-t border-ink-rule pt-12 transition-colors duration-300 ease-signature hover:border-ink-ruleHi">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
-        {/* ── Text column ──────────────────────────────────────────────── */}
-        <Reveal
-          className={
-            hasImages
-              ? `lg:col-span-5 ${isReversed ? "lg:order-2" : "lg:order-1"}`
-              : "lg:col-span-12"
-          }
-        >
-          <p className="text-meta text-bone-faint">{project.context}</p>
-
-          <h3 className="mt-3 text-h3 text-bone transition-colors duration-300 ease-signature group-hover:text-ember sm:text-[1.75rem]">
-            {project.title}
-          </h3>
-
-          <p className="mt-5 max-w-prose text-body text-bone-muted">
-            {project.summary}
-          </p>
-
-          {project.detail ? (
-            <div className="mt-5 max-w-prose space-y-3">
-              {project.detail.map((paragraph) => (
-                <p
-                  key={paragraph.slice(0, 32)}
-                  className="text-meta leading-relaxed text-bone-faint"
-                >
-                  {paragraph}
-                </p>
-              ))}
+    <Reveal className="h-full">
+      <article
+        id={`project-${project.id}`}
+        className="group h-full scroll-mt-24"
+      >
+        <div className="frame flex h-full flex-col bg-ink-panel/60">
+          {cover?.src ? (
+            <div
+              className={`relative aspect-[16/10] overflow-hidden border-b border-ink-rule ${
+                coverFit === "cover" ? "" : "bg-ink-void"
+              }`}
+            >
+              <Image
+                src={cover.src}
+                alt={cover.alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 40rem"
+                className={
+                  coverFit === "cover"
+                    ? `object-cover transition-transform duration-700 ease-signature group-hover:scale-[1.03] ${
+                        cover.display?.objectPosition ?? ""
+                      }`
+                    : "object-contain p-3"
+                }
+              />
             </div>
           ) : null}
 
-          {project.metrics ? (
-            <div className="mt-8">
-              <MetricRow metrics={project.metrics} />
-            </div>
-          ) : null}
+          <div className="flex flex-1 flex-col p-6 sm:p-8">
+            <ChannelMetaLine
+              number={number}
+              channels={project.channels}
+              context={project.context}
+            />
 
-          <div className="mt-8">
-            <TechTagList items={project.tech} />
+            <h3 className="mt-4 text-[1.75rem] font-semibold leading-[1.08] tracking-[-0.03em] text-bone sm:text-[2rem]">
+              <span className="trace pb-1">{project.title}</span>
+            </h3>
+
+            <p className="mt-4 text-body text-bone-muted">{project.summary}</p>
+
+            <div className="mt-6">
+              <TechTagList items={project.tech} />
+            </div>
+
+            {/* Pushes the footer to the bottom so cards in a row line up. */}
+            <div className="mt-auto pt-8">
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+                <ReadMoreLink id={project.id} title={project.title} />
+                {links.length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-x-5">
+                    {links.map((link) => (
+                      <FooterLink key={link.href} href={link.href}>
+                        {link.label}
+                      </FooterLink>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </div>
-
-          {Boolean(project.repoUrl || project.liveUrl || project.extraLinks?.length) && (
-            <div className="mt-8 flex flex-wrap gap-3">
-              {project.liveUrl ? (
-                <ActionLink href={project.liveUrl} variant="solid" external>
-                  Visit site
-                </ActionLink>
-              ) : null}
-              {project.extraLinks?.map((link) => (
-                <ActionLink key={link.href} href={link.href} external>
-                  {link.label}
-                </ActionLink>
-              ))}
-              {project.repoUrl ? (
-                <ActionLink href={project.repoUrl} external>
-                  Repository
-                </ActionLink>
-              ) : null}
-            </div>
-          )}
-
-          {project.linkNote ? (
-            <p className="mt-6 text-meta text-bone-faint">{project.linkNote}</p>
-          ) : null}
-        </Reveal>
-
-        {/* ── Image column ─────────────────────────────────────────────── */}
-        {hasImages ? (
-          <Reveal
-            delay={0.08}
-            className={`lg:col-span-7 ${isReversed ? "lg:order-1" : "lg:order-2"}`}
-          >
-            <div className="space-y-6">
-              {project.images.map((image) => (
-                <AssetImage
-                  key={image.alt}
-                  asset={image}
-                  // Defaults suit screenshots and diagrams: never crop, always
-                  // 16:9. Photographs override both from the content file.
-                  defaultAspect="aspect-[16/9]"
-                  defaultFit="contain"
-                  sizes="(max-width: 1024px) 100vw, 46rem"
-                />
-              ))}
-            </div>
-          </Reveal>
-        ) : null}
-      </div>
-    </article>
+        </div>
+      </article>
+    </Reveal>
   );
 }

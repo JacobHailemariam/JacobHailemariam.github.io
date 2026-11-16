@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { palette, withAlpha } from "@/lib/palette";
 import {
   BANDS,
@@ -36,7 +36,8 @@ const easeOut = (t: number) => 1 - (1 - t) ** 3;
 
 /** Painter's order for an isometric grid: back row first, nearest last. */
 const DRAW_ORDER = Array.from({ length: COLS * ROWS }, (_, i) => i).sort(
-  (a, b) => (a % COLS) + Math.floor(a / COLS) - ((b % COLS) + Math.floor(b / COLS)),
+  (a, b) =>
+    (a % COLS) + Math.floor(a / COLS) - ((b % COLS) + Math.floor(b / COLS)),
 );
 
 const CLASS_RGB = CLASSES.map((c) => hexToRgb(c.color));
@@ -115,7 +116,7 @@ export default function FusionExplorer() {
     const infrared = new Float32Array(count * 3);
     const elevation = new Float32Array(count * 3);
     const low = hexToRgb(palette.ink.ruleHi);
-    const high = hexToRgb(palette.volt.hi);
+    const high = hexToRgb(palette.ch1.hi);
     for (let i = 0; i < count; i += 1) {
       infrared.set(colorInfrared(sim.spectra[i]), i * 3);
       const t = Math.min(1, sim.heights[i] / 12) ** 0.8;
@@ -214,7 +215,7 @@ export default function FusionExplorer() {
       // never hidden behind a taller neighbour.
       const z = sim.heights[sel] * zScale * lift;
       const { north, east, south, west } = cornersFor(sel, z);
-      isoCtx.strokeStyle = palette.ember.DEFAULT;
+      isoCtx.strokeStyle = palette.ch2.DEFAULT;
       isoCtx.lineWidth = 2;
       isoCtx.beginPath();
       isoCtx.moveTo(north[0], north[1]);
@@ -223,11 +224,21 @@ export default function FusionExplorer() {
       isoCtx.lineTo(west[0], west[1]);
       isoCtx.closePath();
       isoCtx.stroke();
-      const beacon = isoCtx.createLinearGradient(0, north[1] - tile * 5, 0, north[1]);
-      beacon.addColorStop(0, withAlpha(palette.ember.DEFAULT, 0));
-      beacon.addColorStop(1, withAlpha(palette.ember.DEFAULT, 0.9));
+      const beacon = isoCtx.createLinearGradient(
+        0,
+        north[1] - tile * 5,
+        0,
+        north[1],
+      );
+      beacon.addColorStop(0, withAlpha(palette.ch2.DEFAULT, 0));
+      beacon.addColorStop(1, withAlpha(palette.ch2.DEFAULT, 0.9));
       isoCtx.fillStyle = beacon;
-      isoCtx.fillRect(north[0] - 1, north[1] + tile / 2 - tile * 5, 2, tile * 5);
+      isoCtx.fillRect(
+        north[0] - 1,
+        north[1] + tile / 2 - tile * 5,
+        2,
+        tile * 5,
+      );
     };
 
     const drawMap = (eased: number) => {
@@ -250,24 +261,30 @@ export default function FusionExplorer() {
         if (predicted !== sim.truth[index]) {
           mapCtx.fillStyle = withAlpha(palette.ink.void, 0.85);
           mapCtx.beginPath();
-          mapCtx.arc(x + cell / 2, r * cell + cell / 2, cell * 0.2, 0, Math.PI * 2);
+          mapCtx.arc(
+            x + cell / 2,
+            r * cell + cell / 2,
+            cell * 0.2,
+            0,
+            Math.PI * 2,
+          );
           mapCtx.fill();
         }
       }
 
       if (eased < 1) {
         const glow = mapCtx.createLinearGradient(scanX - 40, 0, scanX, 0);
-        glow.addColorStop(0, withAlpha(palette.volt.DEFAULT, 0));
-        glow.addColorStop(1, withAlpha(palette.volt.hi, 0.55));
+        glow.addColorStop(0, withAlpha(palette.ch1.DEFAULT, 0));
+        glow.addColorStop(1, withAlpha(palette.ch1.hi, 0.55));
         mapCtx.fillStyle = glow;
         mapCtx.fillRect(scanX - 40, 0, 40, cell * ROWS);
-        mapCtx.fillStyle = palette.volt.hi;
+        mapCtx.fillStyle = palette.ch1.hi;
         mapCtx.fillRect(scanX - 1, 0, 2, cell * ROWS);
       }
 
       const sc = sel % COLS;
       const sr = Math.floor(sel / COLS);
-      mapCtx.strokeStyle = palette.ember.DEFAULT;
+      mapCtx.strokeStyle = palette.ch2.DEFAULT;
       mapCtx.lineWidth = 2;
       mapCtx.strokeRect(sc * cell + 1, sr * cell + 1, cell - 2, cell - 2);
     };
@@ -294,7 +311,13 @@ export default function FusionExplorer() {
       const zScale = tile * HEIGHT_PX_PER_TILE;
       const headroom = MAX_HEIGHT_M * zScale + 8;
       const isoHeight = ((COLS + ROWS) * tile) / 2 + headroom + 6;
-      geometry.current = { ...geometry.current, tile, zScale, originX: ROWS * tile, originY: headroom };
+      geometry.current = {
+        ...geometry.current,
+        tile,
+        zScale,
+        originX: ROWS * tile,
+        originY: headroom,
+      };
       iso.style.height = `${isoHeight}px`;
       iso.width = Math.floor(width * dpr);
       iso.height = Math.floor(isoHeight * dpr);
@@ -311,7 +334,9 @@ export default function FusionExplorer() {
 
     const tick = (now: number) => {
       const state = anim.current;
-      state.t = reduceMotion ? 1 : Math.min(1, (now - state.start) / TRANSITION_MS);
+      state.t = reduceMotion
+        ? 1
+        : Math.min(1, (now - state.start) / TRANSITION_MS);
       draw();
       frame = state.t < 1 ? requestAnimationFrame(tick) : null;
     };
@@ -349,7 +374,8 @@ export default function FusionExplorer() {
   };
 
   const select = (index: number) => {
-    if (index < 0 || index >= COLS * ROWS || index === anim.current.selected) return;
+    if (index < 0 || index >= COLS * ROWS || index === anim.current.selected)
+      return;
     anim.current.selected = index;
     setSelected(index);
     kick.current();
@@ -443,7 +469,10 @@ export default function FusionExplorer() {
   const truth = sim.truth[selected];
   const predicted = sim.predictions[mode][selected];
   const probabilities = Array.from(
-    sim.probabilities[mode].subarray(selected * CLASSES.length, (selected + 1) * CLASSES.length),
+    sim.probabilities[mode].subarray(
+      selected * CLASSES.length,
+      (selected + 1) * CLASSES.length,
+    ),
   );
   const confidence = probabilities[predicted];
   const verdict =
@@ -464,9 +493,13 @@ export default function FusionExplorer() {
   const chartW = 520;
   const chartH = 170;
   const px = (b: number) => 10 + (b * (chartW - 20)) / (BANDS - 1);
-  const py = (v: number) => chartH - 22 - (Math.min(v, 0.6) / 0.6) * (chartH - 34);
+  const py = (v: number) =>
+    chartH - 22 - (Math.min(v, 0.6) / 0.6) * (chartH - 34);
   const polyline = (values: ArrayLike<number>) =>
-    Array.from(values, (v, b) => `${px(b).toFixed(1)},${py(v).toFixed(1)}`).join(" ");
+    Array.from(
+      values,
+      (v, b) => `${px(b).toFixed(1)},${py(v).toFixed(1)}`,
+    ).join(" ");
   const nirStart = px(WAVELENGTHS.findIndex((nm) => nm >= 700));
 
   const isoCaption = {
@@ -477,17 +510,12 @@ export default function FusionExplorer() {
   }[mode];
 
   return (
-    <div
-      ref={sectionRef}
-      className="rounded-2xl border border-ink-rule bg-ink-panel/60 p-5 sm:p-8"
-    >
+    <div ref={sectionRef} className="frame bg-ink-panel/70 p-5 sm:p-8">
       {/* ── Header and sensor switch ───────────────────────────────────── */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <p className="text-meta text-volt-hi">Interactive · why fusion matters</p>
-          <h4 className="mt-3 text-h3 text-bone">
-            Two sensors, one decision.
-          </h4>
+          <p className="text-meta text-ch1">Interactive · why fusion matters</p>
+          <h4 className="mt-3 text-h3 text-bone">Two sensors, one decision.</h4>
           <p className="mt-3 text-body text-bone-muted">
             A roof and a road look almost identical to a hyperspectral camera.
             Grass and trees do too. LiDAR tells them apart instantly, but
@@ -499,7 +527,7 @@ export default function FusionExplorer() {
         <div
           role="group"
           aria-label="Sensor input"
-          className="flex shrink-0 flex-wrap gap-1 rounded-full border border-ink-ruleHi p-1"
+          className="flex shrink-0 flex-wrap gap-1 border border-ink-ruleHi p-1"
         >
           {MODES.map((m) => (
             <button
@@ -510,10 +538,10 @@ export default function FusionExplorer() {
                 interactedRef.current = true;
                 changeMode(m.id);
               }}
-              className={`rounded-full px-4 py-2 text-meta font-semibold transition-colors duration-200 ease-signature ${
+              className={`min-h-[2.75rem] px-4 py-2 text-meta font-semibold transition-colors duration-200 ease-signature ${
                 mode === m.id
                   ? "bg-bone text-ink-void"
-                  : "text-bone-muted hover:text-ember"
+                  : "text-bone-muted hover:text-bone"
               }`}
             >
               {m.label}
@@ -550,7 +578,7 @@ export default function FusionExplorer() {
           <p className="mt-3 text-body text-bone-muted">{activeMode.blurb}</p>
 
           <div
-            className="mt-6 w-full rounded-md outline-none ring-ember focus-visible:ring-2"
+            className="mt-6 w-full outline-none ring-bone focus-visible:ring-2"
             tabIndex={0}
             onKeyDown={handleKey}
             aria-label="Predicted land-cover map. Use arrow keys to inspect pixels."
@@ -558,7 +586,7 @@ export default function FusionExplorer() {
             <canvas
               ref={mapRef}
               aria-hidden="true"
-              className="block w-full cursor-crosshair touch-none rounded-md"
+              className="block w-full cursor-crosshair touch-none"
               onPointerMove={pickMap}
               onPointerDown={pickMap}
             />
@@ -568,10 +596,13 @@ export default function FusionExplorer() {
           </p>
           <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
             {CLASSES.map((cls) => (
-              <li key={cls.name} className="flex items-center gap-2 text-meta text-bone-muted">
+              <li
+                key={cls.name}
+                className="flex items-center gap-2 text-meta text-bone-muted"
+              >
                 <span
                   aria-hidden="true"
-                  className="h-2.5 w-2.5 rounded-sm"
+                  className="h-2.5 w-2.5 "
                   style={{ backgroundColor: cls.color }}
                 />
                 {cls.name}
@@ -585,13 +616,17 @@ export default function FusionExplorer() {
       <div className="mt-10 border-t border-ink-rule pt-8">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <p className="text-meta text-bone-muted">
-            <span className="text-bone">Pixel {selected % COLS}, {Math.floor(selected / COLS)}</span>
+            <span className="text-bone">
+              Pixel {selected % COLS}, {Math.floor(selected / COLS)}
+            </span>
             {" · "}actually{" "}
-            <span style={{ color: CLASSES[truth].color }}>{CLASSES[truth].name.toLowerCase()}</span>
+            <span style={{ color: CLASSES[truth].color }}>
+              {CLASSES[truth].name.toLowerCase()}
+            </span>
           </p>
           <p
             className={`text-meta font-semibold ${
-              predicted === truth ? "text-bone" : "text-ember"
+              predicted === truth ? "text-bone" : "text-ch2"
             }`}
           >
             {verdict}
@@ -620,7 +655,7 @@ export default function FusionExplorer() {
                 y={8}
                 width={chartW - 10 - nirStart}
                 height={chartH - 30}
-                fill={withAlpha(palette.volt.DEFAULT, 0.06)}
+                fill={withAlpha(palette.ch1.DEFAULT, 0.06)}
               />
               {MEAN_SPECTRA.map((mean, k) => (
                 <polyline
@@ -640,12 +675,45 @@ export default function FusionExplorer() {
                 strokeWidth={2}
                 strokeLinejoin="round"
               />
-              <line x1={10} x2={chartW - 10} y1={chartH - 22} y2={chartH - 22} stroke={palette.ink.ruleHi} />
-              <text x={10} y={chartH - 6} fill={palette.bone.faint} fontSize={10}>400 nm</text>
-              <text x={nirStart} y={chartH - 6} fill={palette.bone.faint} fontSize={10} textAnchor="middle">700</text>
-              <text x={chartW - 10} y={chartH - 6} fill={palette.bone.faint} fontSize={10} textAnchor="end">1000 nm</text>
-              <text x={nirStart + 6} y={20} fill={palette.volt.hi} fontSize={10}>near-infrared</text>
-              <text x={14} y={20} fill={palette.bone.faint} fontSize={10}>visible</text>
+              <line
+                x1={10}
+                x2={chartW - 10}
+                y1={chartH - 22}
+                y2={chartH - 22}
+                stroke={palette.ink.ruleHi}
+              />
+              <text
+                x={10}
+                y={chartH - 6}
+                fill={palette.bone.faint}
+                fontSize={10}
+              >
+                400 nm
+              </text>
+              <text
+                x={nirStart}
+                y={chartH - 6}
+                fill={palette.bone.faint}
+                fontSize={10}
+                textAnchor="middle"
+              >
+                700
+              </text>
+              <text
+                x={chartW - 10}
+                y={chartH - 6}
+                fill={palette.bone.faint}
+                fontSize={10}
+                textAnchor="end"
+              >
+                1000 nm
+              </text>
+              <text x={nirStart + 6} y={20} fill={palette.ch1.hi} fontSize={10}>
+                near-infrared
+              </text>
+              <text x={14} y={20} fill={palette.bone.faint} fontSize={10}>
+                visible
+              </text>
             </svg>
           </div>
 
@@ -657,10 +725,12 @@ export default function FusionExplorer() {
               Height{usesHeight ? "" : " · not used"}
             </p>
             <div className="mt-2 flex items-end gap-3">
-              <div className="relative h-32 w-3 overflow-hidden rounded-full bg-ink-rule">
+              <div className="relative h-32 w-3 overflow-hidden bg-ink-rule">
                 <div
-                  className="absolute inset-x-0 bottom-0 rounded-full bg-volt-hi transition-[height] duration-300 ease-signature"
-                  style={{ height: `${Math.min(100, (height / MAX_HEIGHT_M) * 100)}%` }}
+                  className="absolute inset-x-0 bottom-0 bg-ch1 transition-[height] duration-300 ease-signature"
+                  style={{
+                    height: `${Math.min(100, (height / MAX_HEIGHT_M) * 100)}%`,
+                  }}
                 />
               </div>
               <p className="font-mono text-h3 text-bone">
@@ -675,11 +745,14 @@ export default function FusionExplorer() {
             <p className="text-meta text-bone-muted">What the model thinks</p>
             <ul className="mt-3 space-y-2.5">
               {CLASSES.map((cls, k) => (
-                <li key={cls.name} className="grid grid-cols-[3.5rem_1fr_2.75rem] items-center gap-3">
+                <li
+                  key={cls.name}
+                  className="grid grid-cols-[3.5rem_1fr_2.75rem] items-center gap-3"
+                >
                   <span className="text-meta text-bone-muted">{cls.name}</span>
-                  <span className="h-2 overflow-hidden rounded-full bg-ink-rule">
+                  <span className="h-2 overflow-hidden bg-ink-rule">
                     <span
-                      className="block h-full rounded-full transition-[width] duration-500 ease-signature"
+                      className="block h-full transition-[width] duration-500 ease-signature"
                       style={{
                         width: `${probabilities[k] * 100}%`,
                         backgroundColor: cls.color,
@@ -697,11 +770,11 @@ export default function FusionExplorer() {
       </div>
 
       <p className="mt-10 max-w-3xl text-micro leading-relaxed text-bone-faint">
-        Toy simulation, built for this page: 800 synthetic pixels and a
-        Gaussian naive-Bayes classifier, all computed live in your browser. It
-        shows why fusion helps — it is not my research model or its results.
-        The real work uses deep networks (CNN, Transformer, and Mamba) on public
-        benchmark datasets like Houston 2013.
+        Toy simulation, built for this page: 800 synthetic pixels and a Gaussian
+        naive-Bayes classifier, all computed live in your browser. It shows why
+        fusion helps — it is not my research model or its results. The real work
+        uses deep networks (CNN, Transformer, and Mamba) on public benchmark
+        datasets like Houston 2013.
       </p>
     </div>
   );

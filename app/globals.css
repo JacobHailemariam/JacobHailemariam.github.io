@@ -5,6 +5,7 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --ease-signature: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   html {
@@ -20,24 +21,18 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Keyboard focus is amber, never removed. Amber rather than violet because
-     violet is doing structural work everywhere else — the focus ring needs to
-     be unmistakably different from decoration. */
-  /* No `rounded-*` here on purpose: the ring follows whatever border-radius
-     the element already has. Setting one globally would square off the pill
-     buttons the moment they receive focus. */
+  /* Keyboard focus is a bright bone ring, never removed. It is deliberately
+     not one of the two channel colours, so focus can't be mistaken for a
+     channel tag. No `rounded-*` here: the ring follows the element's shape. */
   :focus-visible {
-    @apply outline-none ring-2 ring-ember ring-offset-2 ring-offset-ink-void;
+    @apply outline-none ring-2 ring-bone ring-offset-2 ring-offset-ink-void;
   }
 
-  /* Selection picks up the signature accent. Small detail, costs nothing. */
   ::selection {
-    background-color: theme("colors.volt.DEFAULT");
-    color: theme("colors.bone.DEFAULT");
+    background-color: theme("colors.ch1.DEFAULT");
+    color: theme("colors.ink.void");
   }
 
-  /* Headings inherit the display face by default so components don't have to
-     remember to ask for it. */
   h1,
   h2,
   h3,
@@ -47,24 +42,288 @@
 }
 
 @layer components {
-  /* The page's horizontal rhythm. One class, applied at every section, so
-     nothing drifts out of alignment. */
+  /* The page's horizontal rhythm. One class, applied at every section. */
   .shell {
-    @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
   }
 
-  /* Hairline divider used to separate sections. `border-t` on a section would
-     work, but this lets the rule animate in independently of the content. */
   .hairline {
     @apply h-px w-full bg-ink-rule;
+  }
+
+  /* The readout label: small uppercase mono, used for section numbers,
+     channel tags, figure numbers and field names. */
+  .label {
+    @apply font-mono text-micro uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /*
+   * GRATICULE
+   * The grid behind the page, like the etched grid on an oscilloscope screen.
+   * It's a single fixed layer built from CSS gradients (no image, no JS). The
+   * page scrolls over it, which gives a sense of depth for free, and because
+   * the layer itself never moves or repaints, it costs nothing per frame.
+   */
+  .graticule {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(
+        ellipse 55% 45% at 85% 0%,
+        rgba(61, 220, 200, 0.07),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 50% 40% at 0% 100%,
+        rgba(255, 178, 36, 0.045),
+        transparent 70%
+      ),
+      linear-gradient(to right, rgba(230, 233, 236, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(230, 233, 236, 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgba(230, 233, 236, 0.028) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(230, 233, 236, 0.028) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      100% 100%,
+      120px 120px,
+      120px 120px,
+      24px 24px,
+      24px 24px;
+  }
+
+  /*
+   * RAIL TICKS
+   * The ruler that runs down the left edge of every section on wide screens:
+   * a short tick every 12px and a long one every 60px.
+   */
+  .rail-ticks {
+    background-image:
+      linear-gradient(to bottom, theme("colors.ink.ruleHi") 1px, transparent 1px),
+      linear-gradient(to bottom, theme("colors.ink.ruleHi") 1px, transparent 1px);
+    background-size:
+      12px 60px,
+      6px 12px;
+    background-position:
+      right top,
+      right top;
+    background-repeat: repeat-y;
+  }
+
+  /*
+   * FRAME
+   * Square-cornered hairline box with bracket ticks on two corners. Replaces
+   * rounded cards everywhere. Inside a `.group`, the ticks lengthen and
+   * brighten on hover.
+   */
+  .frame {
+    --tick: 10px;
+    --tick-color: theme("colors.bone.faint");
+    position: relative;
+    border: 1px solid theme("colors.ink.rule");
+    transition: border-color 0.3s var(--ease-signature);
+  }
+
+  .frame::before,
+  .frame::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    width: var(--tick);
+    height: var(--tick);
+    pointer-events: none;
+    transition:
+      width 0.45s var(--ease-signature),
+      height 0.45s var(--ease-signature),
+      border-color 0.3s var(--ease-signature);
+  }
+
+  .frame::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid var(--tick-color);
+    border-left: 1px solid var(--tick-color);
+  }
+
+  .frame::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid var(--tick-color);
+    border-bottom: 1px solid var(--tick-color);
+  }
+
+  /* A heading underline that draws itself left to right on hover. */
+  .trace {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 0.6s var(--ease-signature);
+  }
+
+  /*
+   * CASE STUDY DRAWER
+   * Animating `grid-template-rows` from 0fr to 1fr opens a panel to its
+   * natural height without measuring anything in JavaScript. `visibility`
+   * flips at the end of the close (and the start of the open) so links inside
+   * a closed drawer can't be reached with the Tab key.
+   */
+  .drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.55s var(--ease-signature),
+      visibility 0s linear 0.55s;
+  }
+
+  .drawer[data-open="true"] {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.55s var(--ease-signature),
+      visibility 0s linear 0s;
+  }
+
+  .drawer > div {
+    min-height: 0;
+    overflow: hidden;
   }
 }
 
 /*
+ * FUSION NETWORK
+ * The animated network in the research section (FusionNetwork.tsx). Three
+ * moving parts, all CSS:
+ *   .nn-pulse  a short dash that travels along a connection
+ *   .nn-node   a neuron that brightens as the wave passes
+ *   .nn-out    the output neuron that lights for the current prediction
+ * Every path has pathLength="100", so one set of dash numbers fits any length.
+ * The animations pause while the figure is off screen.
+ */
+.nn-pulse {
+  stroke-dasharray: 22 100;
+  stroke-dashoffset: 22;
+  animation: nn-pulse 1.6s linear infinite;
+}
+
+.nn-node {
+  opacity: 0.35;
+  animation: nn-node 1.6s ease-out infinite;
+}
+
+.nn-out {
+  opacity: 0;
+  animation: nn-out 9.6s linear infinite;
+}
+
+.nn-label {
+  fill: theme("colors.bone.faint");
+  animation: nn-label 9.6s linear infinite;
+}
+
+@keyframes nn-pulse {
+  0% { stroke-dashoffset: 22; }
+  55%, 100% { stroke-dashoffset: -100; }
+}
+
+@keyframes nn-node {
+  0%, 100% { opacity: 0.35; }
+  15% { opacity: 1; }
+  60% { opacity: 0.35; }
+}
+
+@keyframes nn-out {
+  0% { opacity: 0; }
+  1.5%, 15% { opacity: 1; }
+  17%, 100% { opacity: 0; }
+}
+
+@keyframes nn-label {
+  0% { fill: theme("colors.bone.faint"); }
+  1.5%, 15% { fill: theme("colors.bone.DEFAULT"); }
+  17%, 100% { fill: theme("colors.bone.faint"); }
+}
+
+@media (scripting: enabled) {
+  .nn:not([data-inview]) :is(.nn-pulse, .nn-node, .nn-out, .nn-label) {
+    animation-play-state: paused;
+  }
+}
+
+/* Hover-only effects, so a tap on a phone never leaves them stuck on. */
+@media (hover: hover) {
+  .group:hover .frame {
+    --tick: 22px;
+    --tick-color: theme("colors.bone.DEFAULT");
+    border-color: theme("colors.ink.ruleHi");
+  }
+
+  .group:hover .trace {
+    background-size: 100% 1px;
+  }
+}
+
+/*
+ * SCROLL REVEALS
+ * components/ui/Reveal.tsx marks an element `data-revealed` the first time it
+ * scrolls into view; everything else is CSS. Only opacity and transform are
+ * animated, both of which the browser can run on the compositor, so the
+ * reveals hold 60fps on phones.
+ *
+ * `scripting: enabled` means the hidden starting state is only applied when
+ * JavaScript can run. With JS off, content is simply visible.
+ */
+@media (scripting: enabled) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity 0.7s var(--ease-signature),
+      transform 0.7s var(--ease-signature);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Stagger mode: the wrapper stays put and its children arrive in order. */
+  [data-reveal="stagger"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal="stagger"] > * {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition:
+      opacity 0.6s var(--ease-signature),
+      transform 0.6s var(--ease-signature);
+    transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 70ms);
+  }
+
+  [data-reveal="stagger"][data-revealed] > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal="stagger"] > :nth-child(2) { --i: 1; }
+  [data-reveal="stagger"] > :nth-child(3) { --i: 2; }
+  [data-reveal="stagger"] > :nth-child(4) { --i: 3; }
+  [data-reveal="stagger"] > :nth-child(5) { --i: 4; }
+  [data-reveal="stagger"] > :nth-child(6) { --i: 5; }
+  [data-reveal="stagger"] > :nth-child(7) { --i: 6; }
+  [data-reveal="stagger"] > :nth-child(n + 8) { --i: 7; }
+}
+
+/*
  * REDUCED MOTION
- * Framer Motion components check useReducedMotion() individually and render
- * their final state directly. This block is the safety net for anything that
- * animates in plain CSS — including scroll-behavior, which Framer can't see.
+ * If the visitor's OS asks for reduced motion, nothing animates: reveals are
+ * simply present, the drawer opens instantly, and smooth scrolling is off.
  */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -75,7 +334,28 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  [data-reveal],
+  [data-reveal] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* The network holds still: neurons evenly lit, one prediction shown. */
+  .nn-node {
+    opacity: 0.7;
+  }
+
+  .nn-out[data-rest] {
+    opacity: 1;
+  }
+
+  .nn-label[data-rest] {
+    fill: theme("colors.bone.DEFAULT");
   }
 }

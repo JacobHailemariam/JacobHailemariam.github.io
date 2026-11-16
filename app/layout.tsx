@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0B",
+  themeColor: "#0B0D10",
   colorScheme: "dark",
 };
 
@@ -78,10 +78,13 @@ export default function RootLayout({
         {/* First tab stop on the page. Visually hidden until focused. */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-50 focus:rounded-full focus:bg-ember focus:px-5 focus:py-2.5 focus:text-meta focus:font-semibold focus:text-ink-void"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-50 focus:bg-bone focus:px-5 focus:py-2.5 focus:text-meta focus:font-semibold focus:text-ink-void"
         >
           Skip to content
         </a>
+
+        {/* The fixed grid behind every section. Decorative. */}
+        <div className="graticule" aria-hidden="true" />
 
         <SiteHeader />
         <main id="main">{children}</main>

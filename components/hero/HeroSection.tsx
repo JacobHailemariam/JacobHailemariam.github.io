@@ -1,181 +1,191 @@
-"use client";
-
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties } from "react";
 import SensorField from "./SensorField";
-import { ActionLink } from "@/components/ui/Primitives";
-import { profile } from "@/lib/site-content";
-import { SIGNATURE_EASE } from "@/lib/motion";
+import { ActionLink, ChannelDot } from "@/components/ui/Primitives";
+import { profile, resume } from "@/lib/site-content";
 
 /**
  * The hero is the site's one orchestrated moment: a single load sequence where
- * the name, identity line, tagline, and CTAs arrive in order, and the sensor
- * field fades up underneath them.
+ * the roles, the name, the identity line and the buttons arrive in order, and
+ * the sensor field fades up underneath them.
  *
- * The layout is deliberately asymmetric — text occupies seven of twelve
- * columns, and the canvas bleeds off the right edge of the viewport rather
- * than sitting politely inside the container. Centred hero text over a full-
- * width background is the default composition, so this isn't that.
+ * KINETIC TYPE. Each line of the name sits in a clipping box and rises into
+ * it, one after the other. The animation is pure CSS (transform only), so it
+ * runs before any JavaScript has loaded and costs nothing afterwards. With
+ * reduced motion on, the global rule in globals.css skips straight to the end
+ * state.
  *
- * The name is set in the display face at up to 8.5rem with -0.045em tracking.
- * At that size the type IS the graphic; nothing else is competing with it.
+ * THE TWO CHANNELS are introduced here: each current role carries its channel
+ * marker, and the legend under the buttons names them. The sensor field does
+ * the same thing wordlessly: the sweep is teal, the cursor lights amber.
+ *
+ * This is a Server Component. The only client JavaScript in the hero is the
+ * canvas.
  */
 
-const container = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.09, delayChildren: 0.12 },
-  },
-};
+/** Delay helper: keeps the load sequence readable as a list of beats. */
+const at = (ms: number): CSSProperties => ({ animationDelay: `${ms}ms` });
 
-const item = {
-  hidden: { opacity: 0, y: 22 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: SIGNATURE_EASE },
-  },
-};
+const NAME_LINES = ["Jacob", "Hailemariam"];
 
 export default function HeroSection() {
-  const prefersReducedMotion = useReducedMotion();
-
-  // With reduced motion we hand Framer identical initial and animate states,
-  // so everything is simply present on load.
-  const variants = prefersReducedMotion
-    ? { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0 } }
-    : item;
-
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative isolate overflow-hidden"
+      className="relative isolate overflow-hidden border-b border-ink-rule"
     >
       {/* ── Sensor field ────────────────────────────────────────────────────
-          Absolutely positioned behind the text, pushed to the right half on
-          desktop so it reads as a companion to the type rather than a
-          background texture beneath it. Pointer events stay live because the
-          cursor interaction is the point; the text above sets its own
-          pointer-events so links still work. */}
+          Behind the text, pushed to the right on desktop so it reads as a
+          companion to the type rather than a texture beneath it. */}
       <div
-        className="absolute inset-y-0 right-0 -z-10 w-full opacity-40 lg:w-[62%] lg:opacity-100"
+        className="absolute inset-y-0 right-0 -z-10 w-full opacity-30 lg:w-[62%] lg:opacity-100"
         aria-hidden="true"
       >
-        <motion.div
-          className="h-full w-full"
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
-        >
+        <div className="h-full w-full animate-fade-in" style={at(200)}>
           <SensorField />
-        </motion.div>
-
-        {/* Feathers the canvas into the page background on its left edge so
-            there's no visible seam where the lattice starts. */}
+        </div>
+        {/* Feathers the canvas into the page on its left edge. */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-ink-void to-transparent" />
       </div>
 
-      <div className="shell relative flex min-h-[92svh] flex-col justify-center py-28 sm:py-32 xl:flex-row xl:items-center xl:justify-between xl:gap-16">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="min-w-0 max-w-4xl"
-        >
+      <div className="shell relative flex min-h-[92svh] flex-col justify-center pb-20 pt-28 sm:pb-24 sm:pt-32 xl:flex-row xl:items-center xl:justify-between xl:gap-16">
+        <div className="min-w-0 max-w-4xl">
           {/* Below xl the name fills the width, so the portrait moves above
               it instead of competing for a column. */}
-          <motion.div variants={variants} className="mb-10 xl:hidden">
-            <div className="relative aspect-[3/4] w-44 overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel sm:w-56">
-              <Image
-                src={profile.headshot.src}
-                alt={profile.headshot.alt}
-                fill
-                priority
-                sizes="14rem"
-                className="object-cover"
-              />
+          <div className="mb-9 animate-fade-rise xl:hidden" style={at(80)}>
+            <div className="frame w-40 bg-ink-panel sm:w-52">
+              <div className="relative aspect-[3/4] overflow-hidden">
+                <Image
+                  src={profile.headshot.src}
+                  alt={profile.headshot.alt}
+                  fill
+                  priority
+                  sizes="13rem"
+                  className="object-cover"
+                />
+              </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Current roles. The first thing a recruiter reads, so it names the
-              jobs outright rather than leaving them to the Experience section. */}
-          <motion.ul
-            variants={variants}
-            className="mb-7 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5"
+          {/* Current roles, one per channel. The first thing a recruiter
+              reads, so it names the jobs outright. */}
+          <ul
+            className="mb-7 flex animate-fade-rise flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6"
+            style={at(120)}
           >
             {profile.roles.map((role) => (
-              <li key={role.title} className="flex items-center gap-2.5 text-meta">
-                <span aria-hidden="true" className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-volt opacity-60 motion-reduce:animate-none" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-volt-hi" />
-                </span>
+              <li
+                key={role.title}
+                className="flex items-center gap-2.5 text-meta"
+              >
+                <ChannelDot channel={role.channel} />
                 <span className="font-semibold text-bone">{role.title}</span>
-                <span className="text-bone-faint">· {role.org}</span>
+                <span className="text-bone-muted">· {role.org}</span>
               </li>
             ))}
-          </motion.ul>
+          </ul>
 
-          {/* Name. The h1 carries both the name and the identity line so the
-              document has exactly one h1 and it says who this is. */}
-          <motion.h1
-            id="hero-heading"
-            variants={variants}
-            className="text-h1 font-bold text-bone"
-          >
-            Jacob
-            <br />
-            Hailemariam
-          </motion.h1>
+          {/* Name. One h1 for the document, and it says who this is. Each
+              line is clipped by its wrapper and rises into view. */}
+          <h1 id="hero-heading" className="text-h1 font-bold text-bone">
+            {NAME_LINES.map((line, index) => (
+              <span
+                key={line}
+                className="block overflow-hidden pb-[0.08em] [margin-bottom:-0.08em]"
+              >
+                <span
+                  className="block animate-line-rise"
+                  style={at(220 + index * 110)}
+                >
+                  {line}
+                </span>
+              </span>
+            ))}
+          </h1>
 
-          <motion.p
-            variants={variants}
-            className="mt-8 max-w-2xl text-lede text-bone sm:text-h3"
+          <p
+            className="mt-8 max-w-2xl animate-fade-rise text-lede text-bone sm:text-h3"
+            style={at(520)}
           >
             {profile.identity}.
-          </motion.p>
+          </p>
 
-          <motion.p
-            variants={variants}
-            className="mt-5 max-w-prose text-body text-bone-muted"
+          <p
+            className="mt-5 max-w-prose animate-fade-rise text-body text-bone-muted"
+            style={at(600)}
           >
             {profile.tagline}
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={variants}
-            className="mt-10 flex flex-wrap items-center gap-3"
+          <div
+            className="mt-9 flex animate-fade-rise flex-wrap items-center gap-3"
+            style={at(680)}
           >
             <ActionLink href="#work" variant="solid">
               View work
             </ActionLink>
+            {resume ? (
+              <ActionLink href={resume.href} download={resume.fileName}>
+                Resume
+              </ActionLink>
+            ) : null}
             <ActionLink href={profile.github} external>
               GitHub
             </ActionLink>
             <ActionLink href={profile.linkedin} external>
               LinkedIn
             </ActionLink>
-          </motion.div>
-        </motion.div>
+          </div>
+
+          {/* The legend: what the two colours on this site mean. */}
+          <dl
+            className="mt-12 grid max-w-xl animate-fade-rise grid-cols-1 border-t border-ink-rule sm:grid-cols-2"
+            style={at(780)}
+          >
+            <div className="border-b border-ink-rule py-4 sm:border-b-0 sm:pr-6">
+              <dt className="label flex items-center gap-2 text-ch1">
+                <ChannelDot channel="ml" />
+                CH1 · Machine learning
+              </dt>
+              <dd className="mt-2 text-meta text-bone-muted">
+                Models I design, train and benchmark.
+              </dd>
+            </div>
+            <div className="py-4 sm:border-l sm:border-ink-rule sm:pl-6">
+              <dt className="label flex items-center gap-2 text-ch2">
+                <ChannelDot channel="hw" />
+                CH2 · Hardware
+              </dt>
+              <dd className="mt-2 text-meta text-bone-muted">
+                Firmware and boards they have to run on.
+              </dd>
+            </div>
+          </dl>
+        </div>
 
         {/* On wide screens the portrait gets its own column, sitting over the
             sensor field so the two read as one composition. */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: SIGNATURE_EASE, delay: 0.45 }}
-          className="hidden w-80 shrink-0 xl:block 2xl:w-96"
+        <div
+          className="hidden w-80 shrink-0 animate-fade-rise xl:block 2xl:w-96"
+          style={at(450)}
         >
-          <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-ink-ruleHi bg-ink-panel">
-            <Image
-              src={profile.headshot.src}
-              alt={profile.headshot.alt}
-              fill
-              priority
-              sizes="24rem"
-              className="object-cover"
-            />
+          <div className="frame bg-ink-panel">
+            <div className="relative aspect-[3/4] overflow-hidden">
+              <Image
+                src={profile.headshot.src}
+                alt={profile.headshot.alt}
+                fill
+                priority
+                sizes="24rem"
+                className="object-cover"
+              />
+            </div>
           </div>
-        </motion.div>
+          <p className="label mt-3 flex justify-between text-bone-faint">
+            <span>{profile.location}</span>
+            <span>ECE</span>
+          </p>
+        </div>
       </div>
     </section>
   );

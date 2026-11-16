@@ -1,110 +1,120 @@
 import AssetImage from "@/components/ui/AssetImage";
 import Reveal from "@/components/ui/Reveal";
-import { TechTagList, MetricRow, ActionLink } from "@/components/ui/Primitives";
-import FusionExplorer from "./FusionExplorer";
+import {
+  ActionLink,
+  ChannelTags,
+  MetricRow,
+  ReadMoreLink,
+  TechTagList,
+} from "@/components/ui/Primitives";
+import FusionNetwork from "./FusionNetwork";
 import type { Project } from "@/lib/site-content";
 
 /**
- * The headline project gets a layout that appears exactly once on the page.
+ * The headline project: one wide card, deliberately bigger than the grid of
+ * cards below it.
  *
- * That's the whole mechanism by which "this is the most important thing here"
- * is communicated — not a badge saying FEATURED, not a bigger font size on an
- * otherwise identical card. Hierarchy through structure. A recruiter skimming
- * for ninety seconds registers "this block is different" before they've read
- * a word of it.
- *
- * The hyperspectral strip runs full width above the text because it's an
- * unusual shape (roughly 4.7:1) and a striking one. Cropping it into a
- * conventional 16:9 card would throw away the thing that makes it arresting.
+ * The face is kept to what a recruiter reads in a few seconds: what it is,
+ * the numbers and the tools on the left; the data and the baseline
+ * architecture on the right. The animated network runs across the full width
+ * underneath. Everything else (problem / decision / impact, the interactive demo and the case study) is on the project's
+ * own page, one "Read more" away.
  */
 export default function FeaturedProject({ project }: { project: Project }) {
-  const [primaryImage, ...supportingImages] = project.images;
+  const [scene, architecture] = project.images;
 
   return (
-    <article className="relative">
-      {/* A violet rule marks the featured block. It's the only element on the
-          page with this treatment. */}
-      <div
-        aria-hidden="true"
-        className="absolute -left-4 top-1 hidden h-24 w-px bg-gradient-to-b from-volt to-transparent lg:block"
-      />
-
-      <Reveal>
-        <p className="text-meta text-volt-hi">{project.context}</p>
-        <h3 className="mt-4 max-w-3xl text-h2 text-bone">{project.title}</h3>
-        <p className="mt-6 max-w-2xl text-lede text-bone-muted">
-          {project.summary}
-        </p>
-        {project.metrics ? (
-          <div className="mt-10">
-            <MetricRow metrics={project.metrics} />
-          </div>
-        ) : null}
-      </Reveal>
-
-      {/* ── The strip ─────────────────────────────────────────────────── */}
-      <Reveal delay={0.06} className="mt-12">
-        {/* No `priority` here: this sits well below the fold, and the page's
-            LCP element is the hero heading (text). Marking a below-fold image
-            as priority just competes with resources that are actually needed
-            for first paint. */}
-        <AssetImage
-          asset={primaryImage}
-          defaultFit="contain"
-          sizes="(max-width: 1024px) 100vw, 82rem"
-        />
-      </Reveal>
-
-      {/* ── Detail and supporting evidence ────────────────────────────── */}
-      <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="lg:col-span-5">
-          <div className="max-w-prose space-y-5">
-            {project.detail?.map((paragraph) => (
-              <p key={paragraph.slice(0, 32)} className="text-body text-bone-muted">
-                {paragraph}
-              </p>
-            ))}
+    <article
+      id={`project-${project.id}`}
+      className="group frame scroll-mt-24 bg-ink-panel/60 p-5 sm:p-8 lg:p-10"
+    >
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_25rem] xl:gap-14">
+        {/* ── Left: the story ─────────────────────────────────────────── */}
+        <Reveal stagger className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span className="label text-bone-muted">
+              <span className="sr-only">Project </span>01
+            </span>
+            <ChannelTags channels={project.channels} />
           </div>
 
-          <div className="mt-9">
-            <TechTagList items={project.tech} />
+          <div>
+            <h3 className="mt-5 text-[clamp(1.75rem,3.4vw,2.75rem)] leading-[1.05] tracking-tight text-bone">
+              {project.title}
+            </h3>
+            <p className="mt-3 text-meta text-bone-faint">{project.context}</p>
           </div>
 
-          {/* Rather than leaving a dead "Code" button or a link to nowhere,
-              say plainly why there isn't one. Silence looks like an omission;
-              a one-line explanation looks like judgement. */}
-          {project.linkNote ? (
-            <p className="mt-8 text-meta text-bone-faint">{project.linkNote}</p>
+          <p className="mt-6 text-body text-bone-muted sm:text-lede">
+            {project.summary}
+          </p>
+
+          {project.metrics ? (
+            <div className="mt-8">
+              <MetricRow metrics={project.metrics} />
+            </div>
           ) : null}
 
-          {project.repoUrl ? (
-            <div className="mt-8">
-              <ActionLink href={project.repoUrl} external>
-                Repository
-              </ActionLink>
+          <div className="mt-8">
+            <TechTagList items={project.tech} />
+          </div>
+        </Reveal>
+
+        {/* ── Right: the data, then the model it goes into ───────────── */}
+        <Reveal delay={0.1} className="min-w-0 space-y-6">
+          {scene ? (
+            <div>
+              <AssetImage
+                asset={scene}
+                defaultAspect="aspect-[16/9]"
+                defaultFit="cover"
+                showCaption={false}
+                sizes="(max-width: 1024px) 100vw, 25rem"
+              />
+              <p className="mt-2 text-meta text-bone-faint">
+                <span className="label mr-2 text-bone-muted">Data</span>
+                Houston 2013 scene in false colour.
+              </p>
+            </div>
+          ) : null}
+          {architecture ? (
+            <div>
+              <AssetImage
+                asset={architecture}
+                defaultFit="contain"
+                showCaption={false}
+                sizes="(max-width: 1024px) 100vw, 25rem"
+              />
+              <p className="mt-2 text-meta text-bone-faint">
+                <span className="label mr-2 text-bone-muted">Model</span>
+                Baseline architecture, DAHGMN (Xie et al., IEEE TGRS 2025). Not
+                my design; full citation on the project page.
+              </p>
             </div>
           ) : null}
         </Reveal>
-
-        <Reveal delay={0.08} className="lg:col-span-7">
-          <div className="space-y-8">
-            {supportingImages.map((image) => (
-              <AssetImage
-                key={image.alt}
-                asset={image}
-                defaultAspect="aspect-[16/9]"
-                defaultFit="contain"
-                sizes="(max-width: 1024px) 100vw, 46rem"
-              />
-            ))}
-          </div>
-        </Reveal>
       </div>
 
-      {/* ── The hook ──────────────────────────────────────────────────── */}
-      <Reveal className="mt-16 sm:mt-20">
-        <FusionExplorer />
+      {/* ── The model, right on the card ───────────────────────────────── */}
+      <Reveal className="mt-10">
+        <FusionNetwork />
       </Reveal>
+
+      {/* ── Everything else is on the project page ────────────────────── */}
+      <div className="mt-10 border-t border-ink-rule pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <ReadMoreLink id={project.id} title={project.title} />
+          {project.linkNote ? (
+            <span className="text-meta text-bone-faint">
+              {project.linkNote}
+            </span>
+          ) : project.repoUrl ? (
+            <ActionLink href={project.repoUrl} external>
+              Repository
+            </ActionLink>
+          ) : null}
+        </div>
+      </div>
     </article>
   );
 }

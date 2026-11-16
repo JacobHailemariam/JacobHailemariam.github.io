@@ -1,73 +1,90 @@
 import SectionShell from "@/components/layout/SectionShell";
 import Reveal from "@/components/ui/Reveal";
-import { experience } from "@/lib/site-content";
+import { ChannelTags } from "@/components/ui/Primitives";
+import { experience, type Channel } from "@/lib/site-content";
 
 /**
- * The only place on the site with a vertical spine and node markers.
+ * Roles as a timeline: one vertical rail down the left edge with a dot per
+ * role, coloured by channel (teal for ML, amber for hardware, neutral for
+ * software). Each entry puts who and when on the left with the role title
+ * set large, and what I did on the right.
  *
- * A timeline only makes sense for content that is actually a sequence. A
- * skills list has no first and last; roles over time do, so here the rail
- * encodes real information: reverse chronology, and how recent each thing is.
- *
- * Markup is an ordered list, because that's what this is. The rail itself is
- * aria-hidden decoration drawn over the list's left edge.
+ * Markup is an ordered list, because reverse chronology is a real sequence.
+ * The rail and dots are decoration and hidden from screen readers; the
+ * channel is still announced through ChannelTags.
  */
+
+/** Fill for the timeline dot and the bullet squares, by channel. */
+const CHANNEL_FILL: Record<Channel, string> = {
+  ml: "bg-ch1",
+  hw: "bg-ch2",
+  sw: "bg-bone-faint",
+};
+
 export default function ExperienceSection() {
   return (
     <SectionShell
       id="experience"
-      heading="Where I've been"
-      deck="Most recent first."
+      index={2}
+      heading="Experience"
+      deck="Where I've been, most recent first."
     >
-      <ol className="relative">
-        {/* The spine. Fades out at the bottom so it terminates rather than
-            stopping abruptly mid-air. */}
-        <div
+      <div className="relative">
+        {/* The rail. Runs from the first dot to the bottom of the list. Kept
+            outside the <ol> so the list only contains list items. */}
+        <span
           aria-hidden="true"
-          className="absolute bottom-6 left-[7px] top-3 w-px bg-gradient-to-b from-ink-ruleHi via-ink-ruleHi to-transparent sm:left-[7px]"
+          className="absolute bottom-0 left-[5px] top-3 w-px bg-ink-ruleHi"
         />
 
-        {experience.map((role, index) => (
-          <Reveal
-            as="li"
-            key={role.organisation}
-            delay={index * 0.07}
-            className="relative pb-14 pl-9 last:pb-0 sm:pl-12"
-          >
-            {/* Node. Ring rather than solid dot — reads as an instrument
-                marker, matches the hero's lattice vocabulary. */}
-            <span
-              aria-hidden="true"
-              className="absolute left-0 top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border border-volt bg-ink-void"
+        <ol>
+          {experience.map((role, index) => (
+            <Reveal
+              as="li"
+              key={role.organisation}
+              delay={Math.min(index, 3) * 0.06}
+              className="group relative pb-14 pl-8 last:pb-0 sm:pl-12 sm:pb-16"
             >
-              <span className="h-[5px] w-[5px] rounded-full bg-volt" />
-            </span>
+              {/* Dot on the rail. The ring in the page colour cuts the line so
+                the dot reads as sitting on it. */}
+              <span
+                aria-hidden="true"
+                className={`absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full ring-4 ring-ink-void ${CHANNEL_FILL[role.channel]}`}
+              />
 
-            <p className="font-mono text-meta text-bone-faint">{role.period}</p>
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-14">
+                <div className="min-w-0">
+                  <p className="label text-bone-muted">{role.organisation}</p>
+                  <h3 className="mt-3 text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.05] tracking-[-0.03em] text-bone">
+                    <span className="trace pb-1">{role.title}</span>
+                  </h3>
+                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <p className="font-mono text-meta text-bone-faint">
+                      {role.period}
+                    </p>
+                    <ChannelTags channels={[role.channel]} />
+                  </div>
+                </div>
 
-            <h3 className="mt-2 text-h3 text-bone">{role.title}</h3>
-
-            <p className="mt-1.5 text-body text-volt-hi">{role.organisation}</p>
-
-            <ul className="mt-5 max-w-prose space-y-2.5">
-              {role.points.map((point) => (
-                <li
-                  key={point.slice(0, 32)}
-                  className="relative pl-5 text-body text-bone-muted"
-                >
-                  {/* A hairline dash instead of a bullet glyph. Quieter, and
-                      it aligns with the hairline language used elsewhere. */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 top-[0.7em] h-px w-2.5 bg-ink-ruleHi"
-                  />
-                  {point}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        ))}
-      </ol>
+                <ul className="min-w-0 space-y-3 lg:pt-7">
+                  {role.points.map((point) => (
+                    <li
+                      key={point.slice(0, 32)}
+                      className="relative pl-6 text-body text-bone-muted"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`absolute left-0 top-[0.62em] h-1.5 w-1.5 ${CHANNEL_FILL[role.channel]}`}
+                      />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
     </SectionShell>
   );
 }
