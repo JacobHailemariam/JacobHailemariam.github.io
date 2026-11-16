@@ -46,7 +46,7 @@ function FooterLink({ href, children }: { href: string; children: string }) {
  */
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const number = String(index + 2).padStart(2, "0");
-  const [cover] = project.images;
+  const cover = project.cover ?? project.images[0];
   const coverFit = cover?.display?.fit ?? "contain";
 
   const links = [

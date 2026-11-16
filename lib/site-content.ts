@@ -94,6 +94,11 @@ export type Project = {
   /** Renders as the reason there's no link, so nobody is left guessing. */
   linkNote?: string;
   images: AssetRef[];
+  /**
+   * The home-page card's image, when the first of `images` doesn't crop well
+   * to the card's wide frame. Falls back to `images[0]`.
+   */
+  cover?: AssetRef;
   /** Only the top two projects have one. */
   caseStudy?: CaseStudy;
 };
@@ -274,19 +279,26 @@ export const projects: Project[] = [
     ],
     repoUrl: "https://github.com/JacobHailemariam/james-gestures",
     liveUrl: null,
+    cover: {
+      src: "/images/atlas-cover.jpg",
+      alt: "The Atlas arm standing upright on the backpack on a hackathon table, with the Arduino UNO Q, PWM board and wiring at its base.",
+      width: 1440,
+      height: 900,
+      display: { fit: "cover" },
+    },
     images: [
       {
-        src: "/images/atlas-worn.jpg",
-        alt: "The Atlas arm mounted on a black backpack and worn in the crowded hackathon hall: red and purple 3D-printed links rising over the shoulder, ending in a pink claw.",
-        caption: "Worn on the backpack in the hackathon hall.",
+        src: "/images/atlas-bench.jpg",
+        alt: "The Atlas arm standing on a table on top of the backpack, with the Arduino UNO Q, PWM board and wiring at its base.",
+        caption: "On the table, with the UNO Q and wiring at the base.",
         width: 900,
         height: 1200,
         display: { aspect: "aspect-[3/4]", fit: "cover", span: "half" },
       },
       {
-        src: "/images/atlas-bench.jpg",
-        alt: "The Atlas arm standing on a table on top of the backpack, with the Arduino UNO Q, PWM board and wiring at its base.",
-        caption: "On the table, with the UNO Q and wiring at the base.",
+        src: "/images/atlas-worn.jpg",
+        alt: "The Atlas arm mounted on a black backpack and worn in the crowded hackathon hall: red and purple 3D-printed links rising over the shoulder, ending in a pink claw.",
+        caption: "Worn on the backpack in the hackathon hall.",
         width: 900,
         height: 1200,
         display: { aspect: "aspect-[3/4]", fit: "cover", span: "half" },
