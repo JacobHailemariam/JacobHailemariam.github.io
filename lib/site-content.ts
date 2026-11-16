@@ -685,6 +685,18 @@ export const experience: Role[] = [
     ],
   },
   {
+    organisation: "Axial, TechStart UCalgary",
+    title: "ML & Computer Vision Developer",
+    period: "Oct 2026 to present",
+    channel: "ml",
+    points: [
+      "Student team app that turns phone video of a campus building into a navigable 3D indoor map. You scan a QR code inside the building and the app walks you to the room you need. In progress.",
+      "Develop the computer vision and ML pipeline: feature matching between frames with SuperPoint and SuperGlue, and 3D reconstruction of indoor spaces with COLMAP.",
+      "Place recognition with NetVLAD so the app knows which part of the building the user is in, and live localization with ARCore/ARKit fused through an Extended Kalman Filter.",
+      "Build the Python backend and React features that connect the vision pipeline to the app, with code tracked and reviewed in Git.",
+    ],
+  },
+  {
     organisation: "Embedded in Embedded, a Garmin-affiliated program",
     title: "Member",
     period: "Sep 2026 to present",
@@ -741,6 +753,11 @@ export const skillGroups: SkillGroup[] = [
       "Multimodal fusion",
       "Hyperspectral & LiDAR data",
       "MediaPipe",
+      "SuperPoint / SuperGlue",
+      "COLMAP",
+      "NetVLAD",
+      "ARCore / ARKit",
+      "Extended Kalman Filter",
     ],
   },
   {
